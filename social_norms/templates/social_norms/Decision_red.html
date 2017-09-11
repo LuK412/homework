@@ -1,0 +1,31 @@
+{% extends "global/Page.html" %}
+{% load staticfiles otree_tags %}
+
+{% block title %}
+	Your Decision
+{% endblock %}
+
+{% block content %}
+
+<p>
+	Your color in the experiment is <strong>{{ player.role }}</strong>.
+</p>
+
+<p>
+	We imagine that it may be difficult for red to decide what one ought to do in this situation. 
+	We therefore asked other students (?) to formulate an advice.
+</p>
+
+<p>
+	The group of students that was asked to advice informs you that red ought to choose {{ player.advice }} in this situation.
+</p>
+	
+
+	{% formfield group.decision_red %}
+
+	{% include 'social_norms/Table.html' %}
+	
+	
+	{% next_button %}
+
+{% endblock %}

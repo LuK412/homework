@@ -1,0 +1,19 @@
+{% extends "global/Page.html" %}
+{% load staticfiles otree_tags %}
+
+{% block title %}
+	Questionnaire
+{% endblock %}
+
+{% block content %}
+
+	{% formfield player.age %}
+	{% formfield player.gender %}
+	{% formfield player.studies %}
+	{% formfield player.studies2 %}
+	{% formfield player.risk %}
+	{% formfield player.country %}
+	
+	{% next_button %}
+
+{% endblock %}

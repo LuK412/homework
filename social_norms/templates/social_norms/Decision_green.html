@@ -1,0 +1,20 @@
+{% extends "global/Page.html" %}
+{% load staticfiles otree_tags %}
+
+{% block title %}
+	Your Decision
+{% endblock %}
+
+{% block content %}
+
+<p>
+	Your color in the experiment is <strong>{{ player.role }}</strong>.
+</p>
+
+	{% formfield group.decision_green %}
+
+	{% include 'social_norms/Table.html' %}
+	
+	{% next_button %}
+
+{% endblock %}

@@ -1,0 +1,28 @@
+{% extends "global/Page.html" %}
+{% load staticfiles otree_tags %}
+
+{% block title %}
+	Revelation
+{% endblock %}
+
+{% block content %}
+
+	{% if player.role == "red" and player.my_group_id == player.round_number %}
+<p>
+       Please stand up and announce your decision. You chose option {{ group.decision_red }}.
+
+    {% elif player.role != "red" and player.my_group_id == player.round_number %}
+<p>
+		The red player in your group chose option {{ group.decision_red }}
+       
+</p>
+	{% else %}
+<p>
+        The red player in group {{ player.round_number }} chose option {{ group.decision_red }}.
+</p>
+
+{% endif %}
+
+	{% next_button %}
+
+{% endblock %}

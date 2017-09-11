@@ -1,0 +1,34 @@
+{% extends "global/Page.html" %}
+{% load staticfiles otree_tags %}
+
+{% block title %}
+    Results
+{% endblock %}
+
+{% block content %}
+
+<p>
+	Your color in the experiment is {{ player.role }}.
+</p>
+
+	{% if player.role == "red" %}
+<p>
+        You chose option {{ group.decision_red }}.
+</p>
+	{% else %}
+<p>
+        The red player in your group chose option {{ group.decision_red }}.
+</p>
+
+	{% endif %}
+
+<p>
+	Hence your payoff is {{ player.payoff }}.
+</p>
+
+	{% include 'social_norms/Table.html' %}
+
+    {% next_button %}
+{% endblock %}
+
+

@@ -1,0 +1,59 @@
+{% extends "global/Page.html" %}
+{% load staticfiles otree_tags %}
+
+{% block title %}
+	Instructions
+{% endblock %}
+
+{% block content %}
+
+<p>
+	Welcome and thank your for participating in the experiment.
+</p>
+
+<p>
+	In this experiment, participants are randomized into groups of three. <br>
+	Within each group, participants are assigned one of three colors (red, blue, green).
+</p>
+
+<p>
+	All players are endowed with {{ Constants.endowment }}.
+</p>
+
+<p>
+	The red player will choose one of 6 possible payoff alterations which affect the
+	payoffs of all participants in the same group. Blue and Green players are asked to indicate
+	which allocation they would like red to choose.
+	There is only one round in the experiment. Therefore every participant makes only one decision.
+</p>
+
+<p>
+	Below you can see the table of payoff changes. All players see the same table.
+</p>
+
+<p>
+	Advice has been formulated by other students about which option the red player should choose.
+</p>
+
+
+
+	{% if player.treatment == "public" %}
+<p>
+    At the end of the experiment, participants will have to stand up, say their group
+    number and the decision they took.
+</p>
+	{% elif player.treatment == "private" %}
+<p>
+    Your role and decision in the experiment will remain private.
+</p>
+
+	{% endif %}
+
+
+
+
+	{% include 'social_norms/Table.html' %}
+	
+	{% next_button %}
+
+{% endblock %}
