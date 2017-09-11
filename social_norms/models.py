@@ -3,6 +3,8 @@ from otree.api import (
 	Currency as c, currency_range
 )
 
+import settings
+
 from django_countries.fields import CountryField
 
 author = 'Luisa'
@@ -15,12 +17,17 @@ The experiment ends with a survey.
 class Constants(BaseConstants):
 	name_in_url = 'social_norms'
 	players_per_group = 3
-	num_rounds = len(player.my_group_id)
+	number = int(float(settings.SESSION_CONFIGS[0]["num_demo_participants"])/3)
+	num_rounds = number
 
 	endowment = c(8)
 
 
 class Subsession(BaseSubsession):
+
+	def ret_red_decision(self):
+		all_groups = self.get_groups()
+		return all_groups[self.round_number - 1].in_round(1).decision_red
 
 	def creating_session(self):
 		self.group_randomly
@@ -40,6 +47,9 @@ class Subsession(BaseSubsession):
 
 
 class Group(BaseGroup):
+
+	def return_old_vars(self):
+		return self.in_round(1).decision_red
 
 	decision_red = models.CharField(
 		choices=["A", "B", "C", "D", "E", "F"],

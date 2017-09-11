@@ -9,16 +9,16 @@
 
 	{% if player.role == "red" and player.my_group_id == player.round_number %}
 <p>
-       Please stand up and announce your decision. You chose option {{ group.decision_red }}.
+       Please stand up and announce your decision. You chose option {{ subsession.ret_red_decision }}.
 
     {% elif player.role != "red" and player.my_group_id == player.round_number %}
 <p>
-		The red player in your group chose option {{ group.decision_red }}
+		The red player in your group chose option {{ subsession.ret_red_decision }}
        
 </p>
 	{% else %}
 <p>
-        The red player in group {{ player.round_number }} chose option {{ group.decision_red }}.
+        The red player in group {{ player.round_number }} chose option {{ subsession.ret_red_decision }}.
 </p>
 
 {% endif %}
