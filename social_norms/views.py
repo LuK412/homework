@@ -51,13 +51,13 @@ class WaitPage(WaitPage):
 class Results(Page):
 	
 	def is_displayed(self):
-		return self.round_number == Constants.num_rounds
+		return self.round_number == len(self.subsession.get_groups())
 
 
 class Questionnaire(Page):
 
 	def is_displayed(self):
-		return self.round_number == Constants.num_rounds
+		return self.round_number == len(self.subsession.get_groups())
 
 
 	form_model = models.Player
@@ -68,6 +68,10 @@ class Questionnaire(Page):
 			return "Are you a non-student?"
 		if values["studies"] != "" and values["studies2"] == True:
 			return "You stated a field of studies, but indicated that you are a non-student."
+
+class LastPage(Page):
+	def is_displayed(self):
+		return self.round_number == len(self.subsession.get_groups())
 
 
 page_sequence = [
@@ -80,4 +84,5 @@ page_sequence = [
 	WaitPage,
 	Results,
 	Questionnaire,
+	LastPage,
 ]

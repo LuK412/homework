@@ -3,7 +3,7 @@ from otree.api import (
 	Currency as c, currency_range
 )
 
-import settings
+#import settings
 
 from django_countries.fields import CountryField
 
@@ -17,8 +17,9 @@ The experiment ends with a survey.
 class Constants(BaseConstants):
 	name_in_url = 'social_norms'
 	players_per_group = 3
-	number = int(float(settings.SESSION_CONFIGS[0]["num_demo_participants"])/3)
-	num_rounds = number
+	num_rounds = 100
+#	number = int(float(settings.SESSION_CONFIGS[0]["num_demo_participants"])/3)
+#	num_rounds = number
 
 	endowment = c(8)
 
