@@ -26,26 +26,30 @@ class Constants(BaseConstants):
 
 class Subsession(BaseSubsession):
 
-	def ret_red_decision(self):
-		all_groups = self.get_groups()
-		return all_groups[self.round_number - 1].in_round(1).decision_red
+#	def creating_session(self):
+#		self.group_randomly
+#		print("Test1")
 
-	def creating_session(self):
-		self.group_randomly
-
-
+#	def before_session_starts(self):
+#		for player in self.get_players():
+#			player.treatment = self.session.config['treatment']
+#			player.advice = self.session.config['advice']
+#		print("Test2")
+			
 	def before_session_starts(self):
+		if self.round_number == 1:
+			self.group_randomly()
 		for player in self.get_players():
 			player.treatment = self.session.config['treatment']
 			player.advice = self.session.config['advice']
-			
-
-	def creating_session(self):
 		group_matrix = self.get_group_matrix()
 		for group in group_matrix:
 			for player in group:
 				player.my_group_id = group_matrix.index(group) + 1
 
+	def ret_red_decision(self):
+		all_groups = self.get_groups()
+		return all_groups[self.round_number - 1].in_round(1).decision_red
 
 class Group(BaseGroup):
 
@@ -159,4 +163,4 @@ class Player(BasePlayer):
 
 	country = CountryField(
 		blank=True,
-		verbose_name="Please indicate your country of birth.") # Kein doc und kein models. möglich davor.
+		verbose_name="Please indicate your country of birth.") # Kein doc möglich.

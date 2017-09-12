@@ -6,26 +6,46 @@ from .models import Constants
 
 class Instructions(Page):
 
+	timeout_seconds = 120
+
 	def is_displayed(self):
 		return self.round_number == 1
 
 
 class Decision_red(Page):
+
+	timeout_seconds = 120
+	def before_next_page(self):
+		if self.timeout_happened:
+			self.group.decision_red = self.player.advice
+
 	form_model = models.Group
 	form_fields = ["decision_red"]
 
 	def is_displayed(self):
 		return self.player.role() == "red" and self.round_number == 1
 
-
 class Decision_blue(Page):
+
+	timeout_seconds = 120
+	def before_next_page(self):
+		if self.timeout_happened:
+			self.group.decision_blue = self.player.advice
+
 	form_model = models.Group
 	form_fields = ["decision_blue"]
 
 	def is_displayed(self):
 		return self.player.role() == "blue" and self.round_number == 1
 
+
 class Decision_green(Page):
+
+	timeout_seconds = 120
+	def before_next_page(self):
+		if self.timeout_happened:
+			self.group.decision_green = self.player.advice
+
 	form_model = models.Group
 	form_fields = ["decision_green"]
 
@@ -38,6 +58,8 @@ class RevelationWaitPage(WaitPage):
 
 class Revelation(Page):
 
+	timeout_seconds = 15
+
 	def is_displayed(self):
 		return self.session.config['treatment'] == "public"
 
@@ -49,12 +71,16 @@ class WaitPage(WaitPage):
 
 
 class Results(Page):
+
+	timeout_seconds = 60
 	
 	def is_displayed(self):
 		return self.round_number == len(self.subsession.get_groups())
 
 
 class Questionnaire(Page):
+
+	timeout_seconds = 120
 
 	def is_displayed(self):
 		return self.round_number == len(self.subsession.get_groups())
