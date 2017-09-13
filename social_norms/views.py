@@ -14,10 +14,15 @@ class Instructions(Page):
 
 class Decision_red(Page):
 
-	timeout_seconds = 120
+	timeout_seconds = 90
 	def before_next_page(self):
 		if self.timeout_happened:
 			self.group.decision_red = self.player.advice
+			self.player.red_timeout = 1
+			self.player.assign_timeout("yes")
+		else:
+			self.player.red_timeout = 0
+			self.player.assign_timeout("no")
 
 	form_model = models.Group
 	form_fields = ["decision_red"]
@@ -27,7 +32,7 @@ class Decision_red(Page):
 
 class Decision_blue(Page):
 
-	timeout_seconds = 120
+	timeout_seconds = 90
 	def before_next_page(self):
 		if self.timeout_happened:
 			self.group.decision_blue = self.player.advice
@@ -41,7 +46,7 @@ class Decision_blue(Page):
 
 class Decision_green(Page):
 
-	timeout_seconds = 120
+	timeout_seconds = 90
 	def before_next_page(self):
 		if self.timeout_happened:
 			self.group.decision_green = self.player.advice

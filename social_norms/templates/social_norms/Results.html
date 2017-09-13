@@ -13,11 +13,24 @@
 
 	{% if player.role == "red" %}
 <p>
-        You chose option {{ group.return_old_vars }}.
+		{% if player.red_timeout == 1 %}
+			The advice {{ group.return_old_vars }} was implemented.
+
+		{% else %}
+			You chose option {{ group.return_old_vars }}.
+
+		{% endif %}
 </p>
 	{% else %}
 <p>
-        The red player in your group chose option {{ group.return_old_vars}}.
+		{% if player.red_timeout == 1 %}
+			The advice {{ group.return_old_vars }} was implemented.
+
+		{% else %}
+			The red player in your group chose option {{ group.return_old_vars}}.
+
+		{% endif %}
+       
 </p>
 
 	{% endif %}
@@ -30,5 +43,3 @@
 
     {% next_button %}
 {% endblock %}
-
-

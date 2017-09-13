@@ -11,6 +11,10 @@
 	Your color in the experiment is <strong>{{ player.role }}</strong>.
 </p>
 
+<p>
+	The group of students that was asked to advice informs you that red ought to choose {{ player.advice }} in this situation.
+
+</p>
 	{% formfield group.decision_blue %}
 
 	{% include 'social_norms/Table.html' %}

@@ -17,7 +17,7 @@ The experiment ends with a survey.
 class Constants(BaseConstants):
 	name_in_url = 'social_norms'
 	players_per_group = 3
-	num_rounds = 100
+	num_rounds = 4
 #	number = int(float(settings.SESSION_CONFIGS[0]["num_demo_participants"])/3)
 #	num_rounds = number
 
@@ -116,9 +116,11 @@ class Player(BasePlayer):
 
 	advice = models.CharField()
 
-	payoff = models.CurrencyField(
-		doc="Payoff for the players"
-		)
+	#payoff = models.CurrencyField(
+	#	doc="Payoff for the players"
+	#	)
+
+	red_timeout = models.BooleanField()
 
 	def role(self):
 		if self.id_in_group == 1:
@@ -127,6 +129,16 @@ class Player(BasePlayer):
 			return "blue"
 		if self.id_in_group == 3:
 			return "green"
+
+	def assign_timeout(self, yes_no):
+		others = self.get_others_in_group()
+		if yes_no == 'yes': 
+			for player in others:
+				player.red_timeout = 1
+		elif yes_no == 'no':
+			for player in others:
+				player.red_timeout = 0
+
 
 
 	# ab hier der Fragebogen:
