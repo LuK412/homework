@@ -9,7 +9,7 @@
 
 	{% if player.role == "red" and player.my_group_id == player.round_number %}
 <p>
-		{% if player.red_timeout == 1 %}
+		{% if player.return_red_timeout == 1 %}
 			You did not indicate any decision. Therefore the advice of the other students was implemented: {{ subsession.ret_red_decision}} <br>
 			Please announce this decision.
 
@@ -20,7 +20,7 @@
 
     {% elif player.role != "red" and player.my_group_id == player.round_number %}
 <p>
-		{% if player.red_timeout == 1 %}
+		{% if player.return_red_timeout == 1 %}
 			The red player in your group did not indicate any decision. Therefore the advice of the other students was implemented: {{subsession.ret_red_decision}} <br>
 
 		{% else %}

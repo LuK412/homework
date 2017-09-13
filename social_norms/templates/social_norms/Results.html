@@ -13,7 +13,7 @@
 
 	{% if player.role == "red" %}
 <p>
-		{% if player.red_timeout == 1 %}
+		{% if player.return_red_timeout == 1 %}
 			The advice {{ group.return_old_vars }} was implemented.
 
 		{% else %}
@@ -23,7 +23,7 @@
 </p>
 	{% else %}
 <p>
-		{% if player.red_timeout == 1 %}
+		{% if player.return_red_timeout == 1 %}
 			The advice {{ group.return_old_vars }} was implemented.
 
 		{% else %}

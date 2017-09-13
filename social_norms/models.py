@@ -122,6 +122,9 @@ class Player(BasePlayer):
 
 	red_timeout = models.BooleanField()
 
+	def return_red_timeout(self):
+		return self.in_round(1).red_timeout
+
 	def role(self):
 		if self.id_in_group == 1:
 			return "red"
