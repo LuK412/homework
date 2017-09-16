@@ -3,42 +3,29 @@ from otree.api import (
 	Currency as c, currency_range
 )
 
-#import settings
 
 from django_countries.fields import CountryField
 
 author = 'Luisa'
 
 doc = """
-The experiment ends with a survey.
+Social norms experiment.
 """
 
 
 class Constants(BaseConstants):
 	name_in_url = 'social_norms'
-	players_per_group = 3
-	num_rounds = 4
-#	number = int(float(settings.SESSION_CONFIGS[0]["num_demo_participants"])/3)
-#	num_rounds = number
+	players_per_group = 3								# Requires a number of participants which is neatly divisible by 3
+	num_rounds = 2										# Please enter at least #participants/3 
 
 	endowment = c(8)
 
 
 class Subsession(BaseSubsession):
-
-#	def creating_session(self):
-#		self.group_randomly
-#		print("Test1")
-
-#	def before_session_starts(self):
-#		for player in self.get_players():
-#			player.treatment = self.session.config['treatment']
-#			player.advice = self.session.config['advice']
-#		print("Test2")
 			
 	def before_session_starts(self):
 		if self.round_number == 1:
-			self.group_randomly()
+			self.group_randomly()						# Participants are randomized into groups of 3
 		for player in self.get_players():
 			player.treatment = self.session.config['treatment']
 			player.advice = self.session.config['advice']
@@ -54,7 +41,7 @@ class Subsession(BaseSubsession):
 class Group(BaseGroup):
 
 	def return_old_vars(self):
-		return self.in_round(1).decision_red
+		return self.in_round(1).decision_red			# I need this in order to have the decision of red (in round 1)
 
 	decision_red = models.CharField(
 		choices=["A", "B", "C", "D", "E", "F"],
@@ -77,53 +64,131 @@ class Group(BaseGroup):
 		doc="green players makes their decision."
 		)
 
+	red_timeout = models.BooleanField(
+		doc="Turns 1 if the red player reaches the timeout on the decision page."
+		)
+
+	blue_timeout = models.BooleanField(
+		doc="Turns 1 if the blue player reaches the timeout on the decision page."	# I need blue and green timeout as well as return_blue_timeout and green such that they get the information that they did not take a decision on the results screen.
+		)
+
+	green_timeout = models.BooleanField(
+		doc="Turns 1 if the green player reaches the timeout on the decision page."
+		)
+
+	def return_red_timeout(self):
+		return self.in_round(1).red_timeout		# I need this because I need a variable if red took no decision (in round 1)
+
+	def return_blue_timeout(self):
+		return self.in_round(1).blue_timeout
+
+	def return_green_timeout(self):
+		return self.in_round(1).green_timeout
+
 	def calculate_payoffs(self):
 		red = self.get_player_by_role("red")
 		blue = self.get_player_by_role("blue")
 		green = self.get_player_by_role("green")
 
 		if self.in_round(1).decision_red == "A":
-			red.payoff = Constants.endowment + c(4)
-			blue.payoff = Constants.endowment
-			green.payoff = Constants.endowment - c(8)
+			if self.in_round(1).red_timeout == 1:
+				red.payoff = c(0)
+			else:
+				red.payoff = Constants.endowment + c(4)
+			if self.in_round(1).blue_timeout == 1:
+				blue.payoff = c(0)
+			else:
+				blue.payoff = Constants.endowment
+			if self.in_round(1).green_timeout == 1:
+				green.payoff = c(0)
+			else:
+				green.payoff = Constants.endowment - c(8)
 		if self.in_round(1).decision_red == "B":
-			red.payoff = Constants.endowment + c(2)
-			blue.payoff = Constants.endowment + c(2)
-			green.payoff = Constants.endowment - c(6)
+			if self.in_round(1).red_timeout == 1:
+				red.payoff = c(0)
+			if self.in_round(1).red_timeout == 0:
+				red.payoff = Constants.endowment + c(2)
+			if self.in_round(1).blue_timeout == 1:
+				blue.payoff = c(0)
+			else:
+				blue.payoff = Constants.endowment + c(2)
+			if self.in_round(1).green_timeout == 1:
+				green.payoff = c(0)
+			else:
+				green.payoff = Constants.endowment - c(6)
 		if self.in_round(1).decision_red == "C":
-			red.payoff = Constants.endowment
-			blue.payoff = Constants.endowment + c(4)
-			green.payoff = Constants.endowment - c(4)
+			if self.in_round(1).red_timeout == 1:
+				red.payoff = c(0)
+			else:
+				red.payoff = Constants.endowment
+			if self.in_round(1).blue_timeout == 1:
+				blue.payoff = c(0)
+			else:
+				blue.payoff = Constants.endowment + c(4)
+			if self.in_round(1).green_timeout == 1:
+				green.payoff = c(0)
+			else:
+				green.payoff = Constants.endowment - c(4)
 		if self.in_round(1).decision_red == "D":
-			red.payoff = Constants.endowment - c(2)
-			blue.payoff = Constants.endowment + c(4)
-			green.payoff = Constants.endowment - c(2)
+			if self.in_round(1).red_timeout == 1:
+				red.payoff = c(0)
+			else:
+				red.payoff = Constants.endowment - c(2)
+			if self.in_round(1).blue_timeout == 1:
+				blue.payoff = c(0)
+			else:
+				blue.payoff = Constants.endowment + c(4)
+			if self.in_round(1).green_timeout == 1:
+				green.payoff = c(0)
+			else:
+				green.payoff = Constants.endowment - c(2)
 		if self.in_round(1).decision_red == "E":
-			red.payoff = Constants.endowment - c(4)
-			blue.payoff = Constants.endowment + c(2)
-			green.payoff = Constants.endowment
+			if self.in_round(1).red_timeout == 1:
+				red.payoff = c(0)
+			else:
+				red.payoff = Constants.endowment - c(4)
+			if self.in_round(1).blue_timeout == 1:
+				blue.payoff = c(0)
+			else:
+				blue.payoff = Constants.endowment + c(2)
+			if self.in_round(1).green_timeout == 1:
+				green.payoff = c(0)
+			else:
+				green.payoff = Constants.endowment
 		if self.in_round(1).decision_red == "F":
-			red.payoff = Constants.endowment - c(6)
-			blue.payoff = Constants.endowment
-			green.payoff = Constants.endowment + c(2)
+			if self.in_round(1).red_timeout == 1:
+				red.payoff = c(0)
+			else:
+				red.payoff = Constants.endowment - c(6)
+			if self.in_round(1).blue_timeout == 1:
+				blue.payoff = c(0)
+			else:
+				blue.payoff = Constants.endowment
+			if self.in_round(1).green_timeout == 1:
+				green.payoff = c(0)
+			else:
+				green.payoff = Constants.endowment + c(2)
 
 
 class Player(BasePlayer):
 
-	my_group_id = models.IntegerField()
+	my_group_id = models.IntegerField(
+		doc="Assigns each player a group ID")
 
-	treatment = models.CharField()
+	treatment = models.CharField(
+		doc="Treatment"
+		)
 
-	advice = models.CharField()
+	advice = models.CharField(
+		doc="Advice which is given to the players (see settings)."
+		)
 
-	#payoff = models.CurrencyField(
-	#	doc="Payoff for the players"
-	#	)
+#	red_timeout = models.BooleanField(
+#		doc="Turns 1 if the red player reaches the timeout on the decision page."
+#		)
 
-	red_timeout = models.BooleanField()
-
-	def return_red_timeout(self):
-		return self.in_round(1).red_timeout
+#	def return_red_timeout(self):
+#		return self.in_round(1).red_timeout		# I need this because I need a variable if red took no decision (in round 1)
 
 	def role(self):
 		if self.id_in_group == 1:
@@ -133,15 +198,14 @@ class Player(BasePlayer):
 		if self.id_in_group == 3:
 			return "green"
 
-	def assign_timeout(self, yes_no):
-		others = self.get_others_in_group()
-		if yes_no == 'yes': 
-			for player in others:
-				player.red_timeout = 1
-		elif yes_no == 'no':
-			for player in others:
-				player.red_timeout = 0
-
+#	def assign_timeout(self, yes_no):
+#		others = self.get_others_in_group()
+#		if yes_no == 'yes': 
+#			for player in others:
+#				player.red_timeout = 1
+#		elif yes_no == 'no':
+#			for player in others:
+#				player.red_timeout = 0
 
 
 	# ab hier der Fragebogen:

@@ -9,30 +9,30 @@
 
 	{% if player.role == "red" and player.my_group_id == player.round_number %}
 <p>
-		{% if player.return_red_timeout == 1 %}
-			You did not indicate any decision. Therefore the advice of the other students was implemented: {{ subsession.ret_red_decision}} <br>
+		{% if group.return_red_timeout == 1 %}
+			You did not indicate any decision. Therefore the advice of the other students was implemented: <strong>{{ subsession.ret_red_decision}}</strong> <br>
 			Please announce this decision.
 
 		{% else %}
-			Please stand up and announce your decision. You chose option {{ subsession.ret_red_decision }}.
+			Please stand up and announce your decision. You chose option <strong>{{ subsession.ret_red_decision }}</strong>.
 
 		{% endif %}
 
     {% elif player.role != "red" and player.my_group_id == player.round_number %}
 <p>
-		{% if player.return_red_timeout == 1 %}
-			The red player in your group did not indicate any decision. Therefore the advice of the other students was implemented: {{subsession.ret_red_decision}} <br>
+		{% if group.return_red_timeout == 1 %}
+			The red player in your group did not indicate any decision. Therefore the advice of the other students was implemented: <strong>{{subsession.ret_red_decision}}</strong> <br>
 
 		{% else %}
-			The red player in your group chose option {{ subsession.ret_red_decision }}
+			The red player in your group chose option <strong>{{ subsession.ret_red_decision }}</strong>.
 
 		{% endif %}
        
 </p>
 	{% else %}
 <p>
+		The red player in group {{ player.round_number }} chose option {{ subsession.ret_red_decision }}.
 
-        The red player in group {{ player.round_number }} chose option {{ subsession.ret_red_decision }}.
 </p>
 
 {% endif %}

@@ -8,35 +8,47 @@
 {% block content %}
 
 <p>
-	Your color in the experiment is {{ player.role }}.
+	Your color in your group is <strong>{{ player.role }}</strong>.
 </p>
 
 	{% if player.role == "red" %}
 <p>
-		{% if player.return_red_timeout == 1 %}
-			The advice {{ group.return_old_vars }} was implemented.
+		{% if group.return_red_timeout == 1 %}
+			The <strong>advice {{ group.return_old_vars }}</strong> was implemented.
 
 		{% else %}
-			You chose option {{ group.return_old_vars }}.
+			Your choice was option <strong>{{ group.return_old_vars }}</strong>.
 
 		{% endif %}
 </p>
 	{% else %}
 <p>
-		{% if player.return_red_timeout == 1 %}
-			The advice {{ group.return_old_vars }} was implemented.
+		{% if group.return_red_timeout == 1 %}
+			The <strong>advice {{ group.return_old_vars }}</strong> was implemented.
 
 		{% else %}
-			The red player in your group chose option {{ group.return_old_vars}}.
+			The red player in your group chose option <strong>{{ group.return_old_vars}}</strong>.
 
 		{% endif %}
+
+	{% endif %}
        
 </p>
 
+	{% if group.return_red_timeout == 1 and player.role == "red" %}
+		You did not take a decision.
+
+	{% elif group.return_blue_timeout == 1 and player.role == "blue" %}
+		You did not take a decision.
+
+	{% elif group.return_green_timeout == 1 and player.role == "green" %}
+		You did not take a decision.
+
 	{% endif %}
 
+
 <p>
-	Hence your payoff is {{ player.payoff }}.
+	Hence your payoff is <strong>{{ player.payoff }}</strong>.
 </p>
 
 	{% include 'social_norms/Table.html' %}

@@ -14,15 +14,15 @@ class Instructions(Page):
 
 class Decision_red(Page):
 
-	timeout_seconds = 90
-	def before_next_page(self):
-		if self.timeout_happened:
-			self.group.decision_red = self.player.advice
-			self.player.red_timeout = 1
-			self.player.assign_timeout("yes")
+	timeout_seconds = 120											# The timeout on the decision pages can be varied. If you run this
+	def before_next_page(self):										# experiment in the lab, it might be sensible to give participants 
+		if self.timeout_happened:									# more time or even use no timeout.	
+			self.group.decision_red = self.player.advice			# Running this experiment in a lecture, it might be important that
+			self.group.red_timeout = 1								# participants don't get bored and drop out. Therefore, rather short
+#			self.player.assign_timeout("yes")						# decision time might be useful in this case.
 		else:
-			self.player.red_timeout = 0
-			self.player.assign_timeout("no")
+			self.group.red_timeout = 0
+#			self.player.assign_timeout("no")
 
 	form_model = models.Group
 	form_fields = ["decision_red"]
@@ -32,10 +32,12 @@ class Decision_red(Page):
 
 class Decision_blue(Page):
 
-	timeout_seconds = 90
+	timeout_seconds = 120
 	def before_next_page(self):
 		if self.timeout_happened:
-			self.group.decision_blue = self.player.advice
+			self.group.blue_timeout = 1
+		else:
+			self.group.blue_timeout = 0
 
 	form_model = models.Group
 	form_fields = ["decision_blue"]
@@ -46,10 +48,12 @@ class Decision_blue(Page):
 
 class Decision_green(Page):
 
-	timeout_seconds = 90
+	timeout_seconds = 120
 	def before_next_page(self):
 		if self.timeout_happened:
-			self.group.decision_green = self.player.advice
+			self.group.green_timeout = 1
+		else:
+			self.group.green_timeout = 0
 
 	form_model = models.Group
 	form_fields = ["decision_green"]
