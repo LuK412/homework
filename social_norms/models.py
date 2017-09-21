@@ -38,6 +38,10 @@ class Subsession(BaseSubsession):
 		all_groups = self.get_groups()
 		return all_groups[self.round_number - 1].in_round(1).decision_red
 
+	def ret_red_timeout(self):
+		all_groups = self.get_groups()
+		return all_groups[self.round_number -1].in_round(1).red_timeout
+
 class Group(BaseGroup):
 
 	def return_old_vars(self):
@@ -234,7 +238,7 @@ class Player(BasePlayer):
 		doc="Ticking the checkbox means that the participant is a non-student.")
 
 	risk = models.CharField(
-		choices=["Extrem risk averse", "risk averse", "somewhat risk averse", "neutral", "somewhat risk loving", "risk loving", "extreme risk loving"],
+		choices=["Highly risk averse", "risk averse", "somewhat risk averse", "neutral", "somewhat risk loving", "risk loving", "highly risk loving"],
 		widget=widgets.RadioSelectHorizontal(),
 		verbose_name="Please indicate your risk preference.",
 		doc="7 point likert scale to measure risk preference."

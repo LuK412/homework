@@ -8,35 +8,51 @@
 {% block content %}
 
 	{% if player.role == "red" and player.my_group_id == player.round_number %}
-<p>
+
 		{% if group.return_red_timeout == 1 %}
-			You did not indicate any decision. Therefore the advice of the other students was implemented: <strong>{{ subsession.ret_red_decision}}</strong> <br>
-			Please announce this decision.
+			You did not indicate any decision. <br>
+			Therefore the advice of the other students was implemented: <strong>{{ subsession.ret_red_decision}}</strong> <br>
+			<p>&nbsp;</p>
+			
+			Please stand up, say your group number and announce that you took no decision.
+			<p>&nbsp;</p>
+			Your group number: <strong> {{ player.round_number }} </strong>
 
 		{% else %}
-			Please stand up and announce your decision. You chose option <strong>{{ subsession.ret_red_decision }}</strong>.
+			Please stand up, say your group number and announce your decision. 
+			<p>&nbsp;</p>
+			Your group number: <strong> {{ player.round_number }} </strong> <br>
+			Your choice: <strong>{{ subsession.ret_red_decision }}</strong>
 
 		{% endif %}
 
     {% elif player.role != "red" and player.my_group_id == player.round_number %}
-<p>
+
 		{% if group.return_red_timeout == 1 %}
-			The red player in your group did not indicate any decision. Therefore the advice of the other students was implemented: <strong>{{subsession.ret_red_decision}}</strong> <br>
+			The red player in your group did not indicate any decision.<br>
+			Therefore the advice of the other students was implemented: <strong>{{subsession.ret_red_decision}}</strong> <br>
 
 		{% else %}
 			The red player in your group chose option <strong>{{ subsession.ret_red_decision }}</strong>.
 
 		{% endif %}
        
-</p>
 	{% else %}
-<p>
-		The red player in group {{ player.round_number }} chose option {{ subsession.ret_red_decision }}.
 
-</p>
+		{% if subsession.ret_red_timeout == 1 %}
+			The red player in group {{ player.round_number }} did not make a decision. <br>
+			Therefore, the advice {{ subsession.ret_red_decision }} was implemented.
+
+		{% else %}
+			The red player in group {{ player.round_number }} chose option {{ subsession.ret_red_decision }}.
+
+		{% endif %}
+
+
 
 {% endif %}
 
+	<p>&nbsp;</p>
 	{% next_button %}
 
 {% endblock %}

@@ -8,12 +8,17 @@
 {% block content %}
 
 <p>
-	Welcome and thank your for participating in the experiment.
+	Welcome and thank you for participating in the experiment.
+</p>
+
+<p>
+	Please read the following instructions carefully and raise your hand if you have any questions.
 </p>
 
 <p>
 	In this experiment, participants are randomized into groups of three. <br>
-	Within each group, participants are assigned one of three colors (red, blue, green).
+	Within each group, participants are assigned one of three colors (red, blue, green). <br>
+	This means that each group consists of one red player, one blue player and one green player.
 </p>
 
 <p>
@@ -21,26 +26,29 @@
 </p>
 
 <p>
-	The red player will choose one of 6 possible payoff alterations which affect the
-	payoffs of all participants in the same group. Blue and Green players are asked to indicate
-	which allocation they would like red to choose.
-	There is only one round in the experiment. Therefore every participant makes only one decision.
+	The red player of each group will choose one of 6 possible payoff alterations which affect the
+	payoffs of all participants in his/her group. The table summarizing the payoff alterations is displayed below. All players
+	in this experiment see the same table. <br>
+	Blue and green players are asked to indicate which allocation they would like red to choose. Their decision, however,
+	does not affect their payoffs and only the decision of red players determine the payoffs of the members of each group. <br>
+	There is only one round in the experiment. Therefore, every participant makes <strong> only one </strong> decision.
 </p>
 
 <p>
-	Below you can see the table of payoff changes. All players see the same table.
+	We imagine that it may be difficult for red to decide what s/he ought to do in this situation. <br>
+	We therefore asked other students to formulate an advice. This advice will be displayed to all players on the page which asks for their decisions. The advice is the same for all players (i.e. all groups) in this experiment.
+
 </p>
 
-<p>
-	Advice has been formulated by other students about which option the red player should choose.
-</p>
-
-
+<p>&nbsp;</p>
 
 	{% if player.treatment == "public" %}
 <p>
-    At the end of the experiment, participants will have to stand up, say their group
-    number and the decision they took.
+    <strong> Please take the following into account when taking your decision: </strong> <br>
+    <br>
+    After all players took their decision, the <strong> red </strong> players of each group have to stand up, say their group number and the decision, they took. <br>
+    All other participants see the decision of the red players on their screen. 
+
 </p>
 	{% elif player.treatment == "private" %}
 <p>
@@ -49,8 +57,9 @@
 
 	{% endif %}
 
-
-
+<p>&nbsp;</p>
+At the end of the experiment, there will be a ahort questionnaire.
+<p>&nbsp;</p>
 
 	{% include 'social_norms/Table.html' %}
 	

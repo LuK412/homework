@@ -6,7 +6,7 @@ from .models import Constants
 
 class Instructions(Page):
 
-	timeout_seconds = 120
+	timeout_seconds = 480
 
 	def is_displayed(self):
 		return self.round_number == 1
