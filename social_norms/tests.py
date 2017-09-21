@@ -47,6 +47,7 @@ class PlayerBot(Bot):
 				yield SubmissionMustFail(views.Decision_red, {"decision_red": "Z" })
 
 				yield (views.Decision_red, {"decision_red": case['red_decision']})
+				#yield Submission(views.Decision_red, {"decision_red": "self.session.config['advice']"}, timeout_happened=True)
 			
 				#assert self.group.proposer_share == c(60) payoff
 
@@ -72,11 +73,43 @@ class PlayerBot(Bot):
 			
 				#assert self.group.proposer_share == c(60) payoff
 
-		yield (views.Revelation)
+		#page 3
+		if self.session.config['treatment'] == "public":
+
+			# For red players who have to stand up "now"
+			if self.player.role() == "red" and self.player.my_group_id == self.player.round_number:
+				# if they failed to take a decision
+				if self.group.return_red_timeout() == 1:
+					assert ("You did not indicate any decision. Therefore the advice of the other students was implemented: <strong>" + str(self.session.config['advice']) + "</strong>" in self.html)
+				# if they took a decision
+				else:
+					assert ("Please stand up and announce your decision. You chose option <strong>" + str(self.subsession.ret_red_decision()) + "</strong>." in self.html)
+
+			# For blue and green players in groups with the red player standing up "now"
+			elif self.player.role() != "red" and self.player.my_group_id == self.player.round_number:
+				# if the red players failed to take a decision:
+				if self.group.return_red_timeout() == 1:
+					assert ("The red player in your group did not indicate any decision. Therefore the advice of the other students was implemented: <strong>" + str(self.subsession.ret_red_decision()) + "</strong> <br>" in self.html)
+				# if they took a decision 
+				else:
+					assert ("The red player in your group chose option <strong>" + str(self.subsession.ret_red_decision()) + "</strong>." in self.html)
+
+			# For all others in the subsession 
+			else:
+				assert ("The red player in group " + str(self.player.round_number) + " chose option " + str(self.subsession.ret_red_decision()) in self.html)
+
+			yield (views.Revelation)
+
+		
+
+
+
+
 
 		if self.round_number == len(self.subsession.get_groups()):
 
 		# page 4	
+			# check if payoffs are calculated correctly
 			yield (views.Results)
 			if self.player.role() == "red":
 				players_payoff = case["red_payoff"]
@@ -93,7 +126,7 @@ class PlayerBot(Bot):
 			"studies": "Economics",
 			"studies2": False,
 			"risk": "neutral",
-			"country": "Australia"
+			"country": "DK"
 			}
 
 			yield SubmissionMustFail(views.Questionnaire, invalid_age_data)
@@ -104,31 +137,31 @@ class PlayerBot(Bot):
 			"studies": "Economics",
 			"studies2": False,
 			"risk": "neutral",
-			"country": "Australia"
+			"country": "DK"
 			}
 
 			yield SubmissionMustFail(views.Questionnaire, invalid_gender_data)
 
-			# Here we name a field of studies but say that we are not a student.
+			# Here we indicate a field of studies but say that we are not a student.
 			invalid_studies_1 = {
 			"age": 25,
 			"gender": "other",
 			"studies": "English",
 			"studies2": True,
 			"risk": "risk averse",
-			"country": "Australia"
+			"country": "DK"
 			}
 
 			yield SubmissionMustFail(views.Questionnaire, invalid_studies_1)
 
-			# Here we name no field of studies and don't say that we are a non-student.
+			# Here we indicate no field of studies and don't say that we are a non-student.
 			invalid_studies_2 = {
 			"age": 25,
 			"gender": "other",
 			"studies": "",
 			"studies2": False,
 			"risk": "risk averse",
-			"country": "Australia"
+			"country": "DK"
 			}
 
 			yield SubmissionMustFail(views.Questionnaire, invalid_studies_2)
@@ -139,7 +172,7 @@ class PlayerBot(Bot):
 			"studies": "French",
 			"studies2": False,
 			"risk": "",
-			"country": "Australia"
+			"country": "DK"
 			}
 
 			yield SubmissionMustFail(views.Questionnaire, invalid_risk)
@@ -152,7 +185,7 @@ class PlayerBot(Bot):
 			"studies": "Economics",
 			"studies2": False,
 			"risk": "neutral",
-			"country": ""
+			"country": "DK"
 			}
 
 			yield (views.Questionnaire, valid_survey_data)
