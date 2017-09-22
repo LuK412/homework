@@ -30,22 +30,24 @@ class PlayerBot(Bot):
 		if self.player.id_in_group == 3:
 			assert self.player.role() == "green"
 
-		# page 1
+		# page 1: Introduction
 		if self.round_number == 1:
 			# Make sure that the correct information is displayed in each treatment
 			if self.session.config['treatment'] == "private":
 				assert ("Your role and decision in the experiment will remain private." in self.html)
 			if self.session.config['treatment'] == "public":
-				assert ("After all players took their decision" in self.html)
+				assert ("This experiment consists of two parts which are described below." in self.html)
+				assert ("After all players took their decision, the <strong> red </strong> players of each group have to stand up one after another, say their group number and the decision, they took." in self.html)
 			yield (views.Instructions)
 
-		# Example
+		# page 2: Example
 			yield (views.Example)
 
-		# page 2
+		# page 3: Decision_red
 			if self.player.role() == "red":
 				# red's decision page
-				assert ("Your color in the experiment" in self.html)
+				assert ("Your color in the experiment: <strong> red </strong>" in self.html)
+				assert ("Advice formulated by other students: <strong> " + str(self.player.advice) +" </strong>" in self.html)
 				yield SubmissionMustFail(views.Decision_red, {"decision_red": 5 })
 				yield SubmissionMustFail(views.Decision_red, {"decision_red": "Z" })
 
@@ -54,10 +56,11 @@ class PlayerBot(Bot):
 			
 				#assert self.group.proposer_share == c(60) payoff
 
-		# page 2
+		# page 3: Decision_blue
 			if self.player.role() == "blue":
 				# blue's decision page
-				assert ("Your color in the experiment" in self.html)
+				assert ("Your color in the experiment: <strong> blue </strong>" in self.html)
+				assert ("Advice formulated by other students: <strong> " + str(self.player.advice) +" </strong>" in self.html)
 				yield SubmissionMustFail(views.Decision_blue, {"decision_blue": 5 })
 				yield SubmissionMustFail(views.Decision_blue, {"decision_blue": "Z" })
 
@@ -65,10 +68,11 @@ class PlayerBot(Bot):
 			
 				#assert self.group.proposer_share == c(60) payoff
 
-		# page 2
+		# page 3: Decision_green
 			if self.player.role() == "green":
 			# green's decision page
-				assert ("Your color in the experiment" in self.html)
+				assert ("Your color in the experiment: <strong> green </strong>" in self.html)
+				assert ("Advice formulated by other students: <strong> " + str(self.player.advice) +" </strong>" in self.html)
 				yield SubmissionMustFail(views.Decision_green, {"decision_green": 5 })
 				yield SubmissionMustFail(views.Decision_green, {"decision_green": "Z" })
 
@@ -76,8 +80,14 @@ class PlayerBot(Bot):
 			
 				#assert self.group.proposer_share == c(60) payoff
 
-		# Intro Part II
+		# page 4: Intro Part II
 			if self.session.config['treatment'] == "public":
+				if self.player.role() == "red":
+					assert ("Your color in the experiment is <strong> red </strong>." in self.html)
+				if self.player.role() == "blue":
+					assert ("Your color in the experiment is <strong> blue </strong>." in self.html)
+				if self.player.role() == "green":
+					assert ("Your color in the experiment is <strong> green </strong>." in self.html)
 
 				yield (views.Intro_Part_II)
 
@@ -88,30 +98,35 @@ class PlayerBot(Bot):
 			if self.player.role() == "red" and self.player.my_group_id == self.player.round_number:
 				# if they failed to take a decision
 				if self.group.return_red_timeout() == 1:
-					assert ("You did not indicate any decision." in self.html)
+					assert ("Therefore the advice of the other students was implemented: <strong>" + str(self.subsession.ret_red_decision()) +"</strong> <br>" in self.html)
+					assert ("Your group number: <strong> "+ str(self.player.round_number) + " </strong>" in self.html)
 				# if they took a decision
 				else:
-					assert ("Please stand up" in self.html)
+					assert ("Your group number: <strong> " + str(self.player.round_number) + " </strong> <br>" in self.html)
+					assert ("Your choice: <strong>" + str(self.subsession.ret_red_decision()) + "</strong>" in self.html)
 
 			# For blue and green players in groups with the red player standing up "now"
 			elif self.player.role() != "red" and self.player.my_group_id == self.player.round_number:
 				# if the red players failed to take a decision:
 				if self.group.return_red_timeout() == 1:
 					assert ("The red player in your group did not indicate any decision." in self.html)
+					assert ("Therefore the advice of the other students was implemented: <strong>" + str(self.subsession.ret_red_decision()) + "</strong> <br>" in self.html)
 				# if they took a decision 
 				else:
-					assert ("The red player in your group" in self.html)
+					assert ("The red player in your group chose option <strong>" + str(self.subsession.ret_red_decision()) + "</strong>." in self.html)
 
 			# For all others in the subsession 
-			#else:
-			#	assert ("The red player in group " + str(self.player.round_number) + " chose option " + str(self.subsession.ret_red_decision()) in self.html)
+			else:
+				# if the current red player failed to take a decision:
+				if self.subsession.ret_red_timeout() == 1:
+					assert ("The red player in group " +str(self.player.round_number) + " did not make a decision. <br>" in self.html)
+				# If he took a decision:
+				else:
+					assert ("The red player in group " + str(self.player.round_number) + " chose option " + str(self.subsession.ret_red_decision()) in self.html)
 
 			yield (views.Revelation)
 
 		
-
-
-
 
 
 		if self.round_number == len(self.subsession.get_groups()):
