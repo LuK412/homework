@@ -2,7 +2,7 @@
 {% load staticfiles otree_tags %}
 
 {% block title %}
-	Revelation
+	Part II
 {% endblock %}
 
 {% block content %}
@@ -29,7 +29,7 @@
     {% elif player.role != "red" and player.my_group_id == player.round_number %}
 
 		{% if group.return_red_timeout == 1 %}
-			The red player in your group did not indicate any decision.<br>
+			The red player in your group did not indicate any decision. <br>
 			Therefore the advice of the other students was implemented: <strong>{{subsession.ret_red_decision}}</strong> <br>
 
 		{% else %}

@@ -1,0 +1,32 @@
+{% extends "global/Page.html" %}
+{% load staticfiles otree_tags %}
+
+{% block title %}
+	Example
+{% endblock %}
+
+{% block content %}
+
+	Suppose the <strong> red player </strong> chose option <strong> C </strong>.
+	<p>&nbsp;</p>
+
+	Then the payoffs of his/her group members are as follows:
+	<p>&nbsp;</p>
+
+	Payoff red player: 		8 <br>
+	Payoff blue player:		12 <br>
+	Payoff green player: 	4 <br>
+
+	<p>&nbsp;</p>
+	On the next page you will learn which color you are and are asked to make your decision.
+	<p>&nbsp;</p>
+
+
+	{% include 'social_norms/Table.html' %}
+
+
+
+	
+	{% next_button %}
+
+{% endblock %}

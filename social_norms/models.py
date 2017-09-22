@@ -16,7 +16,7 @@ Social norms experiment.
 class Constants(BaseConstants):
 	name_in_url = 'social_norms'
 	players_per_group = 3								# Requires a number of participants which is neatly divisible by 3
-	num_rounds = 2										# Please enter at least #participants/3 
+	num_rounds = 10										# Please enter at least #participants/3 
 
 	endowment = c(8)
 

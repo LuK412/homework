@@ -1,0 +1,41 @@
+{% extends "global/Page.html" %}
+{% load staticfiles otree_tags %}
+
+{% block title %}
+	Part II
+{% endblock %}
+
+{% block content %}
+
+<p>
+	Now, Part II of the experiment begins.
+</p>
+	<p>&nbsp;</p>
+
+	{% if player.role == "red" %}
+
+		Your color in the experiment is <strong> red </strong>.
+		<p>&nbsp;</p>
+		All red players in this room will now sequentially have to stay up, say their group number and the decision they took. <br>
+		Please remain seated until you see the request to stay up on your screen. <br>
+		All other players in this room will see your decision on their screens.
+
+	{% elif player.role == "blue" %}
+
+		Your color in the experiment is <strong> blue </strong>.
+		<p>&nbsp;</p>
+		All <strong> red players </strong> in this room will now sequentially have to stay up, say their group number and the decision they took. <br>
+
+	{% elif player.role == "green" %}
+
+		Your color in the experiment is <strong> green </strong>.
+		<p>&nbsp;</p>
+		All <strong> red players </strong> in this room will now sequentially have to stay up, say their group number and the decision they took. <br>
+
+	{% endif %}
+
+<p>&nbsp;</p>
+	
+	{% next_button %}
+
+{% endblock %}

@@ -2,7 +2,11 @@
 {% load staticfiles otree_tags %}
 
 {% block title %}
+	{% if player.treatment == "public" %}
+	Part I
+	{% elif player.treatment == "private" %}
 	Your Decision
+	{% endif %}
 {% endblock %}
 
 {% block content %}

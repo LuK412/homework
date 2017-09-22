@@ -11,6 +11,13 @@ class Instructions(Page):
 	def is_displayed(self):
 		return self.round_number == 1
 
+class Example(Page):
+
+	timeout_seconds = 120
+
+	def is_displayed(self):
+		return self.round_number == 1
+
 
 class Decision_red(Page):
 
@@ -61,13 +68,20 @@ class Decision_green(Page):
 	def is_displayed(self):
 		return self.player.role() == "green" and self.round_number == 1
 
+class Intro_Part_II(Page):
+
+	timeout_seconds = 120
+
+	def is_displayed(self):
+		return self.session.config["treatment"] == "public" and self.round_number == 1 
+
 class RevelationWaitPage(WaitPage):
 
 	wait_for_all_groups = True
 
 class Revelation(Page):
 
-	timeout_seconds = 15
+	timeout_seconds = 20
 
 	def is_displayed(self):
 		return self.session.config['treatment'] == "public"
@@ -111,9 +125,11 @@ class LastPage(Page):
 
 page_sequence = [
 	Instructions,
+	Example,
 	Decision_red,
 	Decision_blue,
 	Decision_green,
+	Intro_Part_II,
 	RevelationWaitPage,
 	Revelation,
 	WaitPage,
