@@ -79,12 +79,15 @@ class RevelationWaitPage(WaitPage):
 
 	wait_for_all_groups = True
 
+	def is_displayed(self):
+		return self.round_number <= len(self.subsession.get_groups())
+
 class Revelation(Page):
 
 	timeout_seconds = 20
 
 	def is_displayed(self):
-		return self.session.config['treatment'] == "public"
+		return self.session.config['treatment'] == "public" and self.round_number <= len(self.subsession.get_groups())
 
 
 class WaitPage(WaitPage):

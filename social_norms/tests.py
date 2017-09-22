@@ -91,47 +91,49 @@ class PlayerBot(Bot):
 
 				yield (views.Intro_Part_II)
 
-		#page 3
-		if self.session.config['treatment'] == "public":
+		#page 5
+		if self.round_number <= len(self.subsession.get_groups()):
 
-			# For red players who have to stand up "now"
-			if self.player.role() == "red" and self.player.my_group_id == self.player.round_number:
-				# if they failed to take a decision
-				if self.group.return_red_timeout() == 1:
-					assert ("Therefore the advice of the other students was implemented: <strong>" + str(self.subsession.ret_red_decision()) +"</strong> <br>" in self.html)
-					assert ("Your group number: <strong> "+ str(self.player.round_number) + " </strong>" in self.html)
-				# if they took a decision
+			if self.session.config['treatment'] == "public":
+
+				# For red players who have to stand up "now"
+				if self.player.role() == "red" and self.player.my_group_id == self.player.round_number:
+					# if they failed to take a decision
+					if self.group.return_red_timeout() == 1:
+						assert ("Therefore the advice of the other students was implemented: <strong>" + str(self.subsession.ret_red_decision()) +"</strong> <br>" in self.html)
+						assert ("Your group number: <strong> "+ str(self.player.round_number) + " </strong>" in self.html)
+					# if they took a decision
+					else:
+						assert ("Your group number: <strong> " + str(self.player.round_number) + " </strong> <br>" in self.html)
+						assert ("Your choice: <strong>" + str(self.subsession.ret_red_decision()) + "</strong>" in self.html)
+
+				# For blue and green players in groups with the red player standing up "now"
+				elif self.player.role() != "red" and self.player.my_group_id == self.player.round_number:
+					# if the red players failed to take a decision:
+					if self.group.return_red_timeout() == 1:
+						assert ("The red player in your group did not indicate any decision." in self.html)
+						assert ("Therefore the advice of the other students was implemented: <strong>" + str(self.subsession.ret_red_decision()) + "</strong> <br>" in self.html)
+					# if they took a decision 
+					else:
+						assert ("The red player in your group chose option <strong>" + str(self.subsession.ret_red_decision()) + "</strong>." in self.html)
+
+				# For all others in the subsession 
 				else:
-					assert ("Your group number: <strong> " + str(self.player.round_number) + " </strong> <br>" in self.html)
-					assert ("Your choice: <strong>" + str(self.subsession.ret_red_decision()) + "</strong>" in self.html)
+					# if the current red player failed to take a decision:
+					if self.subsession.ret_red_timeout() == 1:
+						assert ("The red player in group " +str(self.player.round_number) + " did not make a decision. <br>" in self.html)
+					# If he took a decision:
+					else:
+						assert ("The red player in group " + str(self.player.round_number) + " chose option " + str(self.subsession.ret_red_decision()) in self.html)
 
-			# For blue and green players in groups with the red player standing up "now"
-			elif self.player.role() != "red" and self.player.my_group_id == self.player.round_number:
-				# if the red players failed to take a decision:
-				if self.group.return_red_timeout() == 1:
-					assert ("The red player in your group did not indicate any decision." in self.html)
-					assert ("Therefore the advice of the other students was implemented: <strong>" + str(self.subsession.ret_red_decision()) + "</strong> <br>" in self.html)
-				# if they took a decision 
-				else:
-					assert ("The red player in your group chose option <strong>" + str(self.subsession.ret_red_decision()) + "</strong>." in self.html)
-
-			# For all others in the subsession 
-			else:
-				# if the current red player failed to take a decision:
-				if self.subsession.ret_red_timeout() == 1:
-					assert ("The red player in group " +str(self.player.round_number) + " did not make a decision. <br>" in self.html)
-				# If he took a decision:
-				else:
-					assert ("The red player in group " + str(self.player.round_number) + " chose option " + str(self.subsession.ret_red_decision()) in self.html)
-
-			yield (views.Revelation)
+				yield (views.Revelation)
 
 		
 
 
 		if self.round_number == len(self.subsession.get_groups()):
 
-		# page 4	
+		# page 6	
 			# check if payoffs are calculated correctly
 			yield (views.Results)
 			if self.player.role() == "red":
