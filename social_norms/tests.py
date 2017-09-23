@@ -9,12 +9,12 @@ from .models import Constants
 class PlayerBot(Bot):
 
 	cases = [
-	{"red_decision": "A", "red_payoff": 12, "blue_payoff": 8, "green_payoff": 0},
-	{"red_decision": "B", "red_payoff": 10, "blue_payoff": 10, "green_payoff": 2},
-	{"red_decision": "C", "red_payoff": 8, "blue_payoff": 12, "green_payoff": 4},
-	{"red_decision": "D", "red_payoff": 6, "blue_payoff": 12, "green_payoff": 6},
-	{"red_decision": "E", "red_payoff": 4, "blue_payoff": 10, "green_payoff": 8},
-	{"red_decision": "F", "red_payoff": 2, "blue_payoff": 8, "green_payoff": 10},
+	{"red_decision": "A", "red_payoff": Constants.endowment + c(4), "blue_payoff": Constants.endowment, "green_payoff": Constants.endowment - c(8)},
+	{"red_decision": "B", "red_payoff": Constants.endowment + c(2), "blue_payoff": Constants.endowment + c(2), "green_payoff": Constants.endowment - c(6)},
+	{"red_decision": "C", "red_payoff": Constants.endowment , "blue_payoff": Constants.endowment + c(4), "green_payoff": Constants.endowment - c(4)},
+	{"red_decision": "D", "red_payoff": Constants.endowment - c(2), "blue_payoff": Constants.endowment + c(4), "green_payoff": Constants.endowment - c(2)},
+	{"red_decision": "E", "red_payoff": Constants.endowment - c(4), "blue_payoff": Constants.endowment + c(2), "green_payoff": Constants.endowment},
+	{"red_decision": "F", "red_payoff": Constants.endowment - c(6), "blue_payoff": Constants.endowment, "green_payoff": Constants.endowment + c(2)},
 	"timeout_red",
 #	"timeout_blue",
 #	"timeout_green"
@@ -61,8 +61,8 @@ class PlayerBot(Bot):
 					yield Submission(views.Decision_red, timeout_happened=True)
 					assert self.group.decision_red == self.session.config['advice']
 
-#				else:
-				elif self.case != "timeout_red" and self.case != "timeout_blue" and self.case != "timeout_green":
+				else:
+#				elif self.case != "timeout_red" and self.case != "timeout_blue" and self.case != "timeout_green":
 					yield (views.Decision_red, {"decision_red": case['red_decision']})
 				
 
@@ -99,7 +99,7 @@ class PlayerBot(Bot):
 
 				yield (views.Intro_Part_II)
 
-		#page 5
+		#page 5: Revelation
 		if self.round_number <= len(self.subsession.get_groups()):
 
 			if self.session.config['treatment'] == "public":
@@ -108,31 +108,31 @@ class PlayerBot(Bot):
 				if self.player.role() == "red" and self.player.my_group_id == self.player.round_number:
 					# if they failed to take a decision
 					if self.group.return_red_timeout() == 1:
-						assert ("Therefore the advice of the other students was implemented: <strong>" + str(self.subsession.ret_red_decision()) +"</strong> <br>" in self.html)
+						assert ("Therefore the advice of the other students was implemented: <strong>" + str(self.subsession.return_red_decision()) +"</strong> <br>" in self.html)
 						assert ("Your group number: <strong> "+ str(self.player.round_number) + " </strong>" in self.html)
 					# if they took a decision
 					else:
 						assert ("Your group number: <strong> " + str(self.player.round_number) + " </strong> <br>" in self.html)
-						assert ("Your choice: <strong>" + str(self.subsession.ret_red_decision()) + "</strong>" in self.html)
+						assert ("Your choice: <strong>" + str(self.subsession.return_red_decision()) + "</strong>" in self.html)
 
 				# For blue and green players in groups with the red player standing up "now"
 				elif self.player.role() != "red" and self.player.my_group_id == self.player.round_number:
 					# if the red players failed to take a decision:
 					if self.group.return_red_timeout() == 1:
 						assert ("The red player in your group did not indicate any decision." in self.html)
-						assert ("Therefore the advice of the other students was implemented: <strong>" + str(self.subsession.ret_red_decision()) + "</strong> <br>" in self.html)
+						assert ("Therefore the advice of the other students was implemented: <strong>" + str(self.subsession.return_red_decision()) + "</strong> <br>" in self.html)
 					# if they took a decision 
 					else:
-						assert ("The red player in your group chose option <strong>" + str(self.subsession.ret_red_decision()) + "</strong>." in self.html)
+						assert ("The red player in your group chose option <strong>" + str(self.subsession.return_red_decision()) + "</strong>." in self.html)
 
 				# For all others in the subsession 
 				else:
 					# if the current red player failed to take a decision:
-					if self.subsession.ret_red_timeout() == 1:
+					if self.subsession.returns_red_timeout() == 1:
 						assert ("The red player in group " +str(self.player.round_number) + " did not make a decision. <br>" in self.html)
 					# If he took a decision:
 					else:
-						assert ("The red player in group " + str(self.player.round_number) + " chose option " + str(self.subsession.ret_red_decision()) in self.html)
+						assert ("The red player in group " + str(self.player.round_number) + " chose option " + str(self.subsession.return_red_decision()) in self.html)
 
 				yield (views.Revelation)
 
@@ -141,7 +141,7 @@ class PlayerBot(Bot):
 
 		if self.round_number == len(self.subsession.get_groups()):
 
-		# page 6	
+		# page 6: Results	
 			# check if payoffs are calculated correctly
 			yield (views.Results)
 
@@ -151,30 +151,30 @@ class PlayerBot(Bot):
 					players_payoff = c(0)
 				if self.player.role() == "blue":
 					if self.session.config['advice'] == "A":
-						players_payoff = c(8)
+						players_payoff = Constants.endowment
 					if self.session.config['advice'] == "B":
-						players_payoff = c(10)
+						players_payoff = Constants.endowment + c(2)
 					if self.session.config['advice'] == "C":
-						players_payoff = c(12)
+						players_payoff = Constants.endowment + c(4)
 					if self.session.config['advice'] == "D":
-						players_payoff = c(12)
+						players_payoff = Constants.endowment + c(4)
 					if self.session.config['advice'] == "E":
-						players_payoff = c(10)
+						players_payoff = Constants.endowment + c(2)
 					if self.session.config['advice'] == "F":
-						players_payoff = c(8)
+						players_payoff = Constants.endowment
 				if self.player.role() == "green":
 					if self.session.config['advice'] == "A":
-						players_payoff = c(0)
+						players_payoff = Constants.endowment - c(8)
 					if self.session.config['advice'] == "B":
-						players_payoff = c(2)
+						players_payoff = Constants.endowment - c(6)
 					if self.session.config['advice'] == "C":
-						players_payoff = c(4)
+						players_payoff = Constants.endowment - c(4)
 					if self.session.config['advice'] == "D":
-						players_payoff = c(6)
+						players_payoff = Constants.endowment - c(2)
 					if self.session.config['advice'] == "E":
-						players_payoff = c(8)
+						players_payoff = Constants.endowment
 					if self.session.config['advice'] == "F":
-						players_payoff = c(10)
+						players_payoff = Constants.endowment + c(2)
 			
 			# if blue had a timeout, s/he should get no payoff
 #			elif self.case == "timeout_blue":
@@ -250,6 +250,7 @@ class PlayerBot(Bot):
 
 			assert self.player.payoff == players_payoff
 
+			# page 7: Questionnaire
 			invalid_age_data = {
 			"age": -1,
 			"gender": "male",

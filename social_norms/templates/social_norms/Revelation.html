@@ -11,7 +11,7 @@
 
 		{% if group.return_red_timeout == 1 %}
 			You did not indicate any decision. <br>
-			Therefore the advice of the other students was implemented: <strong>{{ subsession.ret_red_decision}}</strong> <br>
+			Therefore the advice of the other students was implemented: <strong>{{ subsession.return_red_decision}}</strong> <br>
 			<p>&nbsp;</p>
 			
 			Please stand up, say your group number and announce that you took no decision.
@@ -22,7 +22,7 @@
 			Please stand up, say your group number and announce your decision. 
 			<p>&nbsp;</p>
 			Your group number: <strong> {{ player.round_number }} </strong> <br>
-			Your choice: <strong>{{ subsession.ret_red_decision }}</strong>
+			Your choice: <strong>{{ subsession.return_red_decision }}</strong>
 
 		{% endif %}
 
@@ -30,21 +30,21 @@
 
 		{% if group.return_red_timeout == 1 %}
 			The red player in your group did not indicate any decision. <br>
-			Therefore the advice of the other students was implemented: <strong>{{subsession.ret_red_decision}}</strong> <br>
+			Therefore the advice of the other students was implemented: <strong>{{subsession.return_red_decision}}</strong> <br>
 
 		{% else %}
-			The red player in your group chose option <strong>{{ subsession.ret_red_decision }}</strong>.
+			The red player in your group chose option <strong>{{ subsession.return_red_decision }}</strong>.
 
 		{% endif %}
        
 	{% else %}
 
-		{% if subsession.ret_red_timeout == 1 %}
+		{% if subsession.returns_red_timeout == 1 %}
 			The red player in group {{ player.round_number }} did not make a decision. <br>
-			Therefore, the advice {{ subsession.ret_red_decision }} was implemented.
+			Therefore, the advice {{ subsession.return_red_decision }} was implemented.
 
 		{% else %}
-			The red player in group {{ player.round_number }} chose option {{ subsession.ret_red_decision }}.
+			The red player in group {{ player.round_number }} chose option {{ subsession.return_red_decision }}.
 
 		{% endif %}
 

@@ -6,17 +6,19 @@ from otree.api import (
 
 from django_countries.fields import CountryField
 
-author = 'Luisa'
+author = 'Luisa Kling'
 
 doc = """
-Social norms experiment.
+Social norms experiment to be run in a lecture hall
 """
 
 
 class Constants(BaseConstants):
 	name_in_url = 'social_norms'
-	players_per_group = 3								# Requires a number of participants which is neatly divisible by 3
-	num_rounds = 100								# Please enter at least #participants/3 
+	# Requires a number of participants which is neatly divisible by 3
+	players_per_group = 3
+	# Please enter at least #participants/3
+	num_rounds = 100								 
 
 	endowment = c(8)
 
@@ -24,28 +26,34 @@ class Constants(BaseConstants):
 class Subsession(BaseSubsession):
 			
 	def before_session_starts(self):
+		# randomize participants into groups in round 1 only
 		if self.round_number == 1:
-			self.group_randomly()						# Participants are randomized into groups of 3
+			self.group_randomly()						
 		for player in self.get_players():
-			player.treatment = self.session.config['treatment']
-			player.advice = self.session.config['advice']
+			player.treatment = self.session.config["treatment"]
+			player.advice = self.session.config["advice"]
+
+		# This assigns each player his group ID:
 		group_matrix = self.get_group_matrix()
+		# It iterates over the list which contains sublists (each of those is a group).
+		# Then, it assigns each player in each list his/her group number (index in the list + 1 
+		# because the first value in a list is at index 0).
 		for group in group_matrix:
 			for player in group:
 				player.my_group_id = group_matrix.index(group) + 1
 
-	def ret_red_decision(self):
+	# In the last round (i.e. round number = number of groups) I need to access the decision of the red players in round 1.
+	# This function gives the decision of the red player of the group with group number = actual round number.
+	def return_red_decision(self):
 		all_groups = self.get_groups()
 		return all_groups[self.round_number - 1].in_round(1).decision_red
 
-	def ret_red_timeout(self):
+	# Similarly, this function gives the timeout of the red player of the group with group number = actual round number.
+	def returns_red_timeout(self):
 		all_groups = self.get_groups()
-		return all_groups[self.round_number -1].in_round(1).red_timeout
+		return all_groups[self.round_number - 1].in_round(1).red_timeout
 
 class Group(BaseGroup):
-
-	def return_old_vars(self):
-		return self.in_round(1).decision_red			# I need this in order to have the decision of red (in round 1)
 
 	decision_red = models.CharField(
 		choices=["A", "B", "C", "D", "E", "F"],
@@ -72,16 +80,22 @@ class Group(BaseGroup):
 		doc="Turns 1 if the red player reaches the timeout on the decision page."
 		)
 
+	# I need blue_timeout and return_blue_timeout such that they get the information that they did not take a decision on the results screen.
 	blue_timeout = models.BooleanField(
-		doc="Turns 1 if the blue player reaches the timeout on the decision page."	# I need blue and green timeout as well as return_blue_timeout and green such that they get the information that they did not take a decision on the results screen.
+		doc="Turns 1 if the blue player reaches the timeout on the decision page."
 		)
-
+	# The same as above holds for green_timeout and return_green_timeout
 	green_timeout = models.BooleanField(
 		doc="Turns 1 if the green player reaches the timeout on the decision page."
 		)
 
+	# This gives me the decision of red in round 1 such that the Revelation and Results Templates (which are in later rounds) can use this
+	def return_old_vars(self):
+		return self.in_round(1).decision_red
+
+	# Gives the timeout in round 1 
 	def return_red_timeout(self):
-		return self.in_round(1).red_timeout		# I need this because I need a variable if red took no decision (in round 1)
+		return self.in_round(1).red_timeout		
 
 	def return_blue_timeout(self):
 		return self.in_round(1).blue_timeout
@@ -89,6 +103,7 @@ class Group(BaseGroup):
 	def return_green_timeout(self):
 		return self.in_round(1).green_timeout
 
+	# payoff function (no payoffs if a participant fails to take a decision, i.e. has a timeout on his/her decision page)
 	def calculate_payoffs(self):
 		red = self.get_player_by_role("red")
 		blue = self.get_player_by_role("blue")
@@ -176,24 +191,7 @@ class Group(BaseGroup):
 
 class Player(BasePlayer):
 
-	my_group_id = models.IntegerField(
-		doc="Assigns each player a group ID")
-
-	treatment = models.CharField(
-		doc="Treatment"
-		)
-
-	advice = models.CharField(
-		doc="Advice which is given to the players (see settings)."
-		)
-
-#	red_timeout = models.BooleanField(
-#		doc="Turns 1 if the red player reaches the timeout on the decision page."
-#		)
-
-#	def return_red_timeout(self):
-#		return self.in_round(1).red_timeout		# I need this because I need a variable if red took no decision (in round 1)
-
+	# Within each group, assign all players their colors
 	def role(self):
 		if self.id_in_group == 1:
 			return "red"
@@ -202,17 +200,19 @@ class Player(BasePlayer):
 		if self.id_in_group == 3:
 			return "green"
 
-#	def assign_timeout(self, yes_no):
-#		others = self.get_others_in_group()
-#		if yes_no == 'yes': 
-#			for player in others:
-#				player.red_timeout = 1
-#		elif yes_no == 'no':
-#			for player in others:
-#				player.red_timeout = 0
+	my_group_id = models.IntegerField(
+		doc="Assigns each player a group ID")
+
+	treatment = models.CharField(
+		doc="Treatment (either public or private)"
+		)
+
+	advice = models.CharField(
+		doc="Advice which is given to the players (see settings)."
+		)
 
 
-	# ab hier der Fragebogen:
+	# below the fields of the questionnaire
 	age = models.PositiveIntegerField(
 		max=100,
 		verbose_name="How old are you?",
@@ -220,7 +220,7 @@ class Player(BasePlayer):
 		)
 
 	gender = models.CharField(
-		choices=['female', 'male', 'other'],
+		choices=["female", "male", "other"],
 		widget=widgets.RadioSelect(),
 		verbose_name="Please indicate your gender.",
 		doc="gender indication"
@@ -246,4 +246,5 @@ class Player(BasePlayer):
 
 	country = CountryField(
 		blank=True,
-		verbose_name="Please indicate your country of birth.") # Kein doc möglich.
+		verbose_name="Please indicate your country of birth."
+		) # Kein doc möglich.

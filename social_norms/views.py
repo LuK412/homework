@@ -8,6 +8,7 @@ class Instructions(Page):
 
 	timeout_seconds = 480
 
+	# The pages Instructions, Example, Decision_red/blue/green and Intro_Part_II are only displayed in the fist round.
 	def is_displayed(self):
 		return self.round_number == 1
 
@@ -21,15 +22,21 @@ class Example(Page):
 
 class Decision_red(Page):
 
-	timeout_seconds = 120											# The timeout on the decision pages can be varied. If you run this
-	def before_next_page(self):										# experiment in the lab, it might be sensible to give participants 
-		if self.timeout_happened:									# more time or even use no timeout.	
-			self.group.decision_red = self.player.advice			# Running this experiment in a lecture, it might be important that
-			self.group.red_timeout = 1								# participants don't get bored and drop out. Therefore, rather short
-#			self.player.assign_timeout("yes")						# decision time might be useful in this case.
+	# The timeout on the decision pages can be varied. If you run this experiment in the lab, it might be sensible to give participants
+	# more time or even use no timeout. Running this experiment in a lecture, it might be important that participants don't get bored
+	# and drop out. Therefore, rather short decision time might be useful in this case.
+
+	timeout_seconds = 120
+	def before_next_page(self):
+		# If the red player fails to make a decision...
+		if self.timeout_happened:
+			# ...the advice is going to be implemented
+			self.group.decision_red = self.player.advice
+			# ...red_timeout turns 1
+			self.group.red_timeout = 1
 		else:
+			# otherwise red_timeout is 0.
 			self.group.red_timeout = 0
-#			self.player.assign_timeout("no")
 
 	form_model = models.Group
 	form_fields = ["decision_red"]
@@ -41,8 +48,11 @@ class Decision_blue(Page):
 
 	timeout_seconds = 120
 	def before_next_page(self):
+		# If the blue player fails to make a decision...
 		if self.timeout_happened:
+			# ...blue_timeout turns 1
 			self.group.blue_timeout = 1
+		# otherwise red_timeout is 0.
 		else:
 			self.group.blue_timeout = 0
 
@@ -57,8 +67,11 @@ class Decision_green(Page):
 
 	timeout_seconds = 120
 	def before_next_page(self):
+		# If the green player fails to make a decision...
 		if self.timeout_happened:
+			# ...green_timeout turns 1
 			self.group.green_timeout = 1
+		# otherwise red_timeout is 0.
 		else:
 			self.group.green_timeout = 0
 
@@ -72,6 +85,7 @@ class Intro_Part_II(Page):
 
 	timeout_seconds = 120
 
+	# The pages Intro_Part_II and Revelation are only displayed in the public treatment.
 	def is_displayed(self):
 		return self.session.config["treatment"] == "public" and self.round_number == 1 
 
@@ -86,8 +100,12 @@ class Revelation(Page):
 
 	timeout_seconds = 20
 
+	# This page is only displayed if the round number is less than the number of groups in the experiment.
+	# Remember that num_rounds in models.py is set to a large number.
+	# Going without this is no problem but would mean that participants arrive on Last_Page when the round number equals the group number
+	# and stay there forever, because the next button is missing. Otree, however, "would want" to play all rounds indicated in models.py.
 	def is_displayed(self):
-		return self.session.config['treatment'] == "public" and self.round_number <= len(self.subsession.get_groups())
+		return self.session.config["treatment"] == "public" and self.round_number <= len(self.subsession.get_groups())
 
 
 class WaitPage(WaitPage):
@@ -100,6 +118,8 @@ class Results(Page):
 
 	timeout_seconds = 60
 	
+	# The pages Results, Questionnaire and Last_Page are only displayed in the last round (that is in the round with round number
+	# being equal to the number of groups).
 	def is_displayed(self):
 		return self.round_number == len(self.subsession.get_groups())
 
@@ -108,20 +128,23 @@ class Questionnaire(Page):
 
 	timeout_seconds = 120
 
+	form_model = models.Player
+	form_fields = ["age", "gender", "studies", "studies2", "risk", "country"]
+
+	# returns an error message if a participant...
+	def error_message(self, values):
+		# ... indicates no field of studies and does not tick the box "non-student".
+		if values["studies"] == "" and values["studies2"] != True:
+			return "Are you a non-student?"
+		# ... states a field of studies and claimed to be a non-student.
+		if values["studies"] != "" and values["studies2"] == True:
+			return "You stated a field of studies, but indicated that you are a non-student."
+
 	def is_displayed(self):
 		return self.round_number == len(self.subsession.get_groups())
 
 
-	form_model = models.Player
-	form_fields = ["age", "gender", "studies", "studies2", "risk", "country"]
-
-	def error_message(self, values):
-		if values["studies"] == "" and values["studies2"] != True:
-			return "Are you a non-student?"
-		if values["studies"] != "" and values["studies2"] == True:
-			return "You stated a field of studies, but indicated that you are a non-student."
-
-class LastPage(Page):
+class Last_Page(Page):
 	def is_displayed(self):
 		return self.round_number == len(self.subsession.get_groups())
 
@@ -138,5 +161,5 @@ page_sequence = [
 	WaitPage,
 	Results,
 	Questionnaire,
-	LastPage,
+	Last_Page,
 ]
