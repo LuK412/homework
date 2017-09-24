@@ -15,9 +15,8 @@ class PlayerBot(Bot):
 	{"red_decision": "D", "red_payoff": Constants.endowment - c(2), "blue_payoff": Constants.endowment + c(4), "green_payoff": Constants.endowment - c(2)},
 	{"red_decision": "E", "red_payoff": Constants.endowment - c(4), "blue_payoff": Constants.endowment + c(2), "green_payoff": Constants.endowment},
 	{"red_decision": "F", "red_payoff": Constants.endowment - c(6), "blue_payoff": Constants.endowment, "green_payoff": Constants.endowment + c(2)},
-	"timeout_red",
-#	"timeout_blue",
-#	"timeout_green"
+	"timeout_red",	# only the red player has a timeout
+	"timeout"		# all players have a timeout
 	]
 
 
@@ -57,12 +56,10 @@ class PlayerBot(Bot):
 				yield SubmissionMustFail(views.Decision_red, {"decision_red": "Z" })
 
 				# check that the advice is implemented if red has a timeout
-				if self.case == "timeout_red":
+				if self.case == "timeout_red" or self.case == "timeout":
 					yield Submission(views.Decision_red, timeout_happened=True)
-					assert self.group.decision_red == self.session.config['advice']
-
+					assert self.group.decision_red == self.session.config["advice"]
 				else:
-#				elif self.case != "timeout_red" and self.case != "timeout_blue" and self.case != "timeout_green":
 					yield (views.Decision_red, {"decision_red": case['red_decision']})
 				
 
@@ -74,7 +71,11 @@ class PlayerBot(Bot):
 				yield SubmissionMustFail(views.Decision_blue, {"decision_blue": 5 })
 				yield SubmissionMustFail(views.Decision_blue, {"decision_blue": "Z" })
 
-				yield (views.Decision_blue, {"decision_blue": "C" })
+				# check that the advice is implemented if blue has a timeout
+				if self.case == "timeout":
+					yield Submission(views.Decision_blue, timeout_happened=True)
+				else:
+					yield (views.Decision_blue, {"decision_blue": "C" })
 			
 
 		# page 3: Decision_green
@@ -85,11 +86,15 @@ class PlayerBot(Bot):
 				yield SubmissionMustFail(views.Decision_green, {"decision_green": 5 })
 				yield SubmissionMustFail(views.Decision_green, {"decision_green": "Z" })
 
-				yield (views.Decision_green, {"decision_green": "C" })
+				# check that the advice is implemented if green has a timeout
+				if self.case == "timeout":
+					yield Submission(views.Decision_green, timeout_happened=True)
+				else:
+					yield (views.Decision_green, {"decision_green": "C" })
 			
 
 		# page 4: Intro Part II
-			if self.session.config['treatment'] == "public":
+			if self.session.config["treatment"] == "public":
 				if self.player.role() == "red":
 					assert ("Your color in the experiment is <strong> red </strong>." in self.html)
 				if self.player.role() == "blue":
@@ -102,7 +107,7 @@ class PlayerBot(Bot):
 		#page 5: Revelation
 		if self.round_number <= len(self.subsession.get_groups()):
 
-			if self.session.config['treatment'] == "public":
+			if self.session.config["treatment"] == "public":
 
 				# For red players who have to stand up "now"
 				if self.player.role() == "red" and self.player.my_group_id == self.player.round_number:
@@ -137,16 +142,18 @@ class PlayerBot(Bot):
 				yield (views.Revelation)
 
 		
-
-
 		if self.round_number == len(self.subsession.get_groups()):
 
 		# page 6: Results	
 			# check if payoffs are calculated correctly
 			yield (views.Results)
 
-			# if red had a timeout, s/he should get no payoff
-			if self.case == "timeout_red":
+			# if all players have a timeout, they get a payoff of 0
+			if self.case == "timeout":
+				players_payoff = c(0)
+				
+			# if only red has a timeout, s/he should get no payoff
+			elif self.case == "timeout_red":
 				if self.player.role() == "red":
 					players_payoff = c(0)
 				if self.player.role() == "blue":
@@ -176,71 +183,7 @@ class PlayerBot(Bot):
 					if self.session.config['advice'] == "F":
 						players_payoff = Constants.endowment + c(2)
 			
-			# if blue had a timeout, s/he should get no payoff
-#			elif self.case == "timeout_blue":
-#				if self.player.role() == "red":
-#					if self.decision_red == "A":
-#						players_payoff = c(12)
-#					if self.decision_red == "B":
-#						players_payoff = c(10)
-#					if self.decision_red == "C":
-#						players_payoff = c(8)
-#					if self.decision_red == "D":
-#						players_payoff = c(6)
-#					if self.decision_red == "E":
-#						players_payoff = c(4)
-#					if self.decision_red == "F":
-#						players_payoff = c(2)
-#				if self.player.role() == "blue":
-#					players_payoff = 0
-#				if self.player.role() == "green":
-#					if self.decision_red == "A":
-#						players_payoff = c(0)
-#					if self.decision_red == "B":
-#						players_payoff = c(2)
-#					if self.decision_red == "C":
-#						players_payoff = c(4)
-#					if self.decision_red == "D":
-#						players_payoff = c(6)
-#					if self.decision_red == "E":
-#						players_payoff = c(8)
-#					if self.decision_red == "F":
-#						players_payoff = c(10)
-
-
-			# if green had a timeout, s/he should get no payoff
-#			elif self.case == "timeout_green":
-#				if self.player.role() == "red":
-#					if self.decision_red == "A":
-#						players_payoff = c(12)
-#					if self.decision_red == "B":
-#						players_payoff = c(10)
-#					if self.decision_red == "C":
-#						players_payoff = c(8)
-#					if self.decision_red == "D":
-#						players_payoff = c(6)
-#					if self.decision_red == "E":
-#						players_payoff = c(4)
-#					if self.decision_red == "F":
-#						players_payoff = c(2)
-#				if self.player.role() == "blue":
-#					if self.decision_red == "A":
-#						players_payoff = c(8)
-#					if self.decision_red == "B":
-#						players_payoff = c(10)
-#					if self.decision_red == "C":
-#						players_payoff = c(12)
-#					if self.decision_red == "D":
-#						players_payoff = c(12)
-#					if self.decision_red == "E":
-#						players_payoff = c(10)
-#					if self.decision_red == "F":
-#						players_payoff = c(8)
-#				if self.player.role() == "green":
-#					players_payoff = 0
-
 			else:
-#			elif self.case != "timeout_red" and self.case != "timeout_blue" and self.case != "timeout_green":
 				if self.player.role() == "red":
 					players_payoff = case["red_payoff"]
 				if self.player.role() == "blue":
