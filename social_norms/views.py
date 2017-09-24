@@ -113,6 +113,14 @@ class WaitPage(WaitPage):
 	def after_all_players_arrive(self):
 		self.group.calculate_payoffs()
 
+	# I added the following because otherwise the payments on the screen "$ Payments" (I have no idea how to call it, but I mean the screen
+	# when we created a session which we as experimenters can see and use to pay participants) were the actual payoff times
+	# number of groups (= number of rounds actually played).
+	# Remark: The variable payoff took the correct number because I refer only to payoff in round 1. However, it's better to see the "correct"
+	# payoffs when actually running the experiment ;)
+	def is_displayed(self):
+		return self.round_number == len(self.subsession.get_groups())
+
 
 class Results(Page):
 

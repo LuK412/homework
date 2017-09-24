@@ -111,7 +111,7 @@ SESSION_CONFIGS = [
         'num_demo_participants': 6,
         'app_sequence': ['social_norms'],
         'treatment': 'public',              # choose either "public" or "private"
-        'advice': 'A'                        # choose one of the options in the table.
+        'advice': 'F'                        # choose one of the options in the table.
     },
 ]
 

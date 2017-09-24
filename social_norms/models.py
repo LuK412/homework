@@ -22,6 +22,11 @@ class Constants(BaseConstants):
 
 	endowment = c(8)
 
+	payoff_matrix = {"red":{"A": c(4), "B": c(2), "C": c(0), "D": c(-2), "E": c(-4), "F": c(-6)},
+					"blue":{"A": c(0), "B": c(2), "C": c(4), "D": c(4), "E": c(2), "F": c(0)},
+					"green":{"A": c(-8), "B": c(-6), "C": c(-4), "D": c(-2), "E": c(0), "F": c(2)}
+					}
+
 
 class Subsession(BaseSubsession):
 			
@@ -109,85 +114,99 @@ class Group(BaseGroup):
 		blue = self.get_player_by_role("blue")
 		green = self.get_player_by_role("green")
 
-		if self.in_round(1).decision_red == "A":
-			if self.in_round(1).red_timeout == 1:
-				red.payoff = c(0)
-			else:
-				red.payoff = Constants.endowment + c(4)
-			if self.in_round(1).blue_timeout == 1:
-				blue.payoff = c(0)
-			else:
-				blue.payoff = Constants.endowment
-			if self.in_round(1).green_timeout == 1:
-				green.payoff = c(0)
-			else:
-				green.payoff = Constants.endowment - c(8)
-		if self.in_round(1).decision_red == "B":
-			if self.in_round(1).red_timeout == 1:
-				red.payoff = c(0)
-			if self.in_round(1).red_timeout == 0:
-				red.payoff = Constants.endowment + c(2)
-			if self.in_round(1).blue_timeout == 1:
-				blue.payoff = c(0)
-			else:
-				blue.payoff = Constants.endowment + c(2)
-			if self.in_round(1).green_timeout == 1:
-				green.payoff = c(0)
-			else:
-				green.payoff = Constants.endowment - c(6)
-		if self.in_round(1).decision_red == "C":
-			if self.in_round(1).red_timeout == 1:
-				red.payoff = c(0)
-			else:
-				red.payoff = Constants.endowment
-			if self.in_round(1).blue_timeout == 1:
-				blue.payoff = c(0)
-			else:
-				blue.payoff = Constants.endowment + c(4)
-			if self.in_round(1).green_timeout == 1:
-				green.payoff = c(0)
-			else:
-				green.payoff = Constants.endowment - c(4)
-		if self.in_round(1).decision_red == "D":
-			if self.in_round(1).red_timeout == 1:
-				red.payoff = c(0)
-			else:
-				red.payoff = Constants.endowment - c(2)
-			if self.in_round(1).blue_timeout == 1:
-				blue.payoff = c(0)
-			else:
-				blue.payoff = Constants.endowment + c(4)
-			if self.in_round(1).green_timeout == 1:
-				green.payoff = c(0)
-			else:
-				green.payoff = Constants.endowment - c(2)
-		if self.in_round(1).decision_red == "E":
-			if self.in_round(1).red_timeout == 1:
-				red.payoff = c(0)
-			else:
-				red.payoff = Constants.endowment - c(4)
-			if self.in_round(1).blue_timeout == 1:
-				blue.payoff = c(0)
-			else:
-				blue.payoff = Constants.endowment + c(2)
-			if self.in_round(1).green_timeout == 1:
-				green.payoff = c(0)
-			else:
-				green.payoff = Constants.endowment
-		if self.in_round(1).decision_red == "F":
-			if self.in_round(1).red_timeout == 1:
-				red.payoff = c(0)
-			else:
-				red.payoff = Constants.endowment - c(6)
-			if self.in_round(1).blue_timeout == 1:
-				blue.payoff = c(0)
-			else:
-				blue.payoff = Constants.endowment
-			if self.in_round(1).green_timeout == 1:
-				green.payoff = c(0)
-			else:
-				green.payoff = Constants.endowment + c(2)
+		if self.in_round(1).red_timeout == 1:
+			red.payoff = c(0)
+		else:
+			red.payoff = Constants.endowment + Constants.payoff_matrix["red"][self.in_round(1).decision_red]
+		if self.in_round(1).blue_timeout == 1:
+			blue.payoff = c(0)
+		else:
+			blue.payoff = Constants.endowment + Constants.payoff_matrix["blue"][self.in_round(1).decision_red]
+		if self.in_round(1).green_timeout == 1:
+			green.payoff = c(0)
+		else:
+			green.payoff = Constants.endowment + Constants.payoff_matrix["green"][self.in_round(1).decision_red]
 
+
+
+#		if self.in_round(1).decision_red == "A":
+#			if self.in_round(1).red_timeout == 1:
+#				red.payoff = c(0)
+#			else:
+#				red.payoff = Constants.endowment + c(4)
+#			if self.in_round(1).blue_timeout == 1:
+#				blue.payoff = c(0)
+#			else:
+#				blue.payoff = Constants.endowment
+#			if self.in_round(1).green_timeout == 1:
+#				green.payoff = c(0)
+#			else:
+#				green.payoff = Constants.endowment - c(8)
+#		if self.in_round(1).decision_red == "B":
+#			if self.in_round(1).red_timeout == 1:
+#				red.payoff = c(0)
+#			if self.in_round(1).red_timeout == 0:
+#				red.payoff = Constants.endowment + c(2)
+#			if self.in_round(1).blue_timeout == 1:
+#				blue.payoff = c(0)
+#			else:
+#				blue.payoff = Constants.endowment + c(2)
+#			if self.in_round(1).green_timeout == 1:
+#				green.payoff = c(0)
+#			else:
+#				green.payoff = Constants.endowment - c(6)
+#		if self.in_round(1).decision_red == "C":
+#			if self.in_round(1).red_timeout == 1:
+#				red.payoff = c(0)
+#			else:
+#				red.payoff = Constants.endowment
+#			if self.in_round(1).blue_timeout == 1:
+#				blue.payoff = c(0)
+#			else:
+#				blue.payoff = Constants.endowment + c(4)
+#			if self.in_round(1).green_timeout == 1:
+#				green.payoff = c(0)
+#			else:
+#				green.payoff = Constants.endowment - c(4)
+#		if self.in_round(1).decision_red == "D":
+#			if self.in_round(1).red_timeout == 1:
+#				red.payoff = c(0)
+#			else:
+#				red.payoff = Constants.endowment - c(2)
+#			if self.in_round(1).blue_timeout == 1:
+#				blue.payoff = c(0)
+#			else:
+#				blue.payoff = Constants.endowment + c(4)
+#			if self.in_round(1).green_timeout == 1:
+#				green.payoff = c(0)
+#			else:
+#				green.payoff = Constants.endowment - c(2)
+#		if self.in_round(1).decision_red == "E":
+#			if self.in_round(1).red_timeout == 1:
+#				red.payoff = c(0)
+#			else:
+#				red.payoff = Constants.endowment - c(4)
+#			if self.in_round(1).blue_timeout == 1:
+#				blue.payoff = c(0)
+#			else:
+#				blue.payoff = Constants.endowment + c(2)
+#			if self.in_round(1).green_timeout == 1:
+#				green.payoff = c(0)
+#			else:
+#				green.payoff = Constants.endowment
+#		if self.in_round(1).decision_red == "F":
+#			if self.in_round(1).red_timeout == 1:
+#				red.payoff = c(0)
+#			else:
+#				red.payoff = Constants.endowment - c(6)
+#			if self.in_round(1).blue_timeout == 1:
+#				blue.payoff = c(0)
+#			else:
+#				blue.payoff = Constants.endowment
+#			if self.in_round(1).green_timeout == 1:
+#				green.payoff = c(0)
+#			else:
+#				green.payoff = Constants.endowment + c(2)
 
 class Player(BasePlayer):
 

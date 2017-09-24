@@ -9,12 +9,12 @@ from .models import Constants
 class PlayerBot(Bot):
 
 	cases = [
-	{"red_decision": "A", "red_payoff": Constants.endowment + c(4), "blue_payoff": Constants.endowment, "green_payoff": Constants.endowment - c(8)},
-	{"red_decision": "B", "red_payoff": Constants.endowment + c(2), "blue_payoff": Constants.endowment + c(2), "green_payoff": Constants.endowment - c(6)},
-	{"red_decision": "C", "red_payoff": Constants.endowment , "blue_payoff": Constants.endowment + c(4), "green_payoff": Constants.endowment - c(4)},
-	{"red_decision": "D", "red_payoff": Constants.endowment - c(2), "blue_payoff": Constants.endowment + c(4), "green_payoff": Constants.endowment - c(2)},
-	{"red_decision": "E", "red_payoff": Constants.endowment - c(4), "blue_payoff": Constants.endowment + c(2), "green_payoff": Constants.endowment},
-	{"red_decision": "F", "red_payoff": Constants.endowment - c(6), "blue_payoff": Constants.endowment, "green_payoff": Constants.endowment + c(2)},
+	{"red_decision": "A"},
+	{"red_decision": "B"},
+	{"red_decision": "C"},
+	{"red_decision": "D"},
+	{"red_decision": "E"},
+	{"red_decision": "F"},
 	"timeout_red",	# only the red player has a timeout
 	"timeout"		# all players have a timeout
 	]
@@ -157,39 +157,18 @@ class PlayerBot(Bot):
 				if self.player.role() == "red":
 					players_payoff = c(0)
 				if self.player.role() == "blue":
-					if self.session.config['advice'] == "A":
-						players_payoff = Constants.endowment
-					if self.session.config['advice'] == "B":
-						players_payoff = Constants.endowment + c(2)
-					if self.session.config['advice'] == "C":
-						players_payoff = Constants.endowment + c(4)
-					if self.session.config['advice'] == "D":
-						players_payoff = Constants.endowment + c(4)
-					if self.session.config['advice'] == "E":
-						players_payoff = Constants.endowment + c(2)
-					if self.session.config['advice'] == "F":
-						players_payoff = Constants.endowment
+					players_payoff = Constants.endowment + Constants.payoff_matrix["blue"][self.session.config['advice']]
 				if self.player.role() == "green":
-					if self.session.config['advice'] == "A":
-						players_payoff = Constants.endowment - c(8)
-					if self.session.config['advice'] == "B":
-						players_payoff = Constants.endowment - c(6)
-					if self.session.config['advice'] == "C":
-						players_payoff = Constants.endowment - c(4)
-					if self.session.config['advice'] == "D":
-						players_payoff = Constants.endowment - c(2)
-					if self.session.config['advice'] == "E":
-						players_payoff = Constants.endowment
-					if self.session.config['advice'] == "F":
-						players_payoff = Constants.endowment + c(2)
-			
+					players_payoff = Constants.endowment + Constants.payoff_matrix["green"][self.session.config['advice']]
+
+			# If no player failed to make a decision
 			else:
 				if self.player.role() == "red":
-					players_payoff = case["red_payoff"]
+					players_payoff = Constants.endowment + Constants.payoff_matrix["red"][self.group.in_round(1).decision_red]
 				if self.player.role() == "blue":
-					players_payoff = case["blue_payoff"]
+					players_payoff = Constants.endowment + Constants.payoff_matrix["blue"][self.group.in_round(1).decision_red]
 				if self.player.role() == "green":
-					players_payoff = case["green_payoff"]
+					players_payoff = Constants.endowment + Constants.payoff_matrix["green"][self.group.in_round(1).decision_red]
 
 			assert self.player.payoff == players_payoff
 
