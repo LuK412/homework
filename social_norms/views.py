@@ -4,6 +4,13 @@ from ._builtin import Page, WaitPage
 from .models import Constants
 
 
+class WaitPage_1(WaitPage):
+	group_by_arrival_time = True
+
+	def is_displayed(self):
+		return self.round_number == 1
+
+
 class Instructions(Page):
 
 	timeout_seconds = 480
@@ -11,6 +18,10 @@ class Instructions(Page):
 	# The pages Instructions, Example, Decision_red/blue/green and Intro_Part_II are only displayed in the fist round.
 	def is_displayed(self):
 		return self.round_number == 1
+
+	def before_next_page(self):
+		self.subsession.assign_group_id()
+
 
 class Example(Page):
 
@@ -108,7 +119,7 @@ class Revelation(Page):
 		return self.session.config["treatment"] == "public" and self.round_number <= len(self.subsession.get_groups())
 
 
-class WaitPage(WaitPage):
+class WaitPage_2(WaitPage):
 
 	def after_all_players_arrive(self):
 		self.group.calculate_payoffs()
@@ -158,6 +169,7 @@ class Last_Page(Page):
 
 
 page_sequence = [
+	WaitPage_1,
 	Instructions,
 	Example,
 	Decision_red,
@@ -166,7 +178,7 @@ page_sequence = [
 	Intro_Part_II,
 	RevelationWaitPage,
 	Revelation,
-	WaitPage,
+	WaitPage_2,
 	Results,
 	Questionnaire,
 	Last_Page,

@@ -9,7 +9,7 @@ from django_countries.fields import CountryField
 author = 'Luisa Kling'
 
 doc = """
-Social norms experiment to be run in a lecture hall
+Social norms experiment to be run in a lecture hall.
 """
 
 
@@ -32,12 +32,13 @@ class Subsession(BaseSubsession):
 			
 	def before_session_starts(self):
 		# randomize participants into groups in round 1 only
-		if self.round_number == 1:
-			self.group_randomly()						
+		#if self.round_number == 1:
+		#	self.group_randomly()						
 		for player in self.get_players():
 			player.treatment = self.session.config["treatment"]
 			player.advice = self.session.config["advice"]
 
+	def assign_group_id(self):
 		# This assigns each player his group ID:
 		group_matrix = self.get_group_matrix()
 		# It iterates over the list which contains sublists (each of those is a group).
@@ -142,11 +143,16 @@ class Player(BasePlayer):
 	my_group_id = models.IntegerField(
 		doc="Assigns each player a group ID")
 
+	# Returns the group_id of each player in round 1
+	def return_group_id(self):
+		return self.in_round(1).my_group_id
+
 	treatment = models.CharField(
 		doc="Treatment (either public or private)"
 		)
 
 	advice = models.CharField(
+		choices=["A", "B", "C", "D", "E", "F"],
 		doc="Advice which is given to the players (see settings)."
 		)
 

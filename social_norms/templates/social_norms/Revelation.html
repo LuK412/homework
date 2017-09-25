@@ -7,7 +7,7 @@
 
 {% block content %}
 
-	{% if player.role == "red" and player.my_group_id == player.round_number %}
+	{% if player.role == "red" and player.return_group_id == player.round_number %}
 
 		{% if group.return_red_timeout == 1 %}
 			You did not indicate any decision. <br>
@@ -26,7 +26,7 @@
 
 		{% endif %}
 
-    {% elif player.role != "red" and player.my_group_id == player.round_number %}
+    {% elif player.role != "red" and player.return_group_id == player.round_number %}
 
 		{% if group.return_red_timeout == 1 %}
 			The red player in your group did not indicate any decision. <br>
