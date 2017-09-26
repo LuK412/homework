@@ -156,8 +156,10 @@ class Questionnaire(Page):
 		if values["studies"] == "" and values["studies2"] != True:
 			return "Are you a non-student?"
 		# ... states a field of studies and claimed to be a non-student.
-		if values["studies"] != "" and values["studies2"] == True:
+		elif values["studies"] != "" and values["studies2"] == True:
 			return "You stated a field of studies, but indicated that you are a non-student."
+		#elif values["risk"] == "":
+		#	return "Please indicate a risk preference."
 
 	def is_displayed(self):
 		return self.round_number == len(self.subsession.get_groups())

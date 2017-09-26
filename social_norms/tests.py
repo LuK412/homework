@@ -110,7 +110,7 @@ class PlayerBot(Bot):
 			if self.session.config["treatment"] == "public":
 
 				# For red players who have to stand up "now"
-				if self.player.role() == "red" and self.player.in_round(1).my_group_id == self.player.round_number:
+				if self.player.role() == "red" and self.player.return_group_id() == self.player.round_number:
 					# if they failed to take a decision
 					if self.group.return_red_timeout() == 1:
 						assert ("Therefore the advice of the other students was implemented: <strong>" + str(self.subsession.return_red_decision()) +"</strong> <br>" in self.html)
@@ -121,7 +121,7 @@ class PlayerBot(Bot):
 						assert ("Your choice: <strong>" + str(self.subsession.return_red_decision()) + "</strong>" in self.html)
 
 				# For blue and green players in groups with the red player standing up "now"
-				elif self.player.role() != "red" and self.player.in_round(1).my_group_id == self.player.round_number:
+				elif self.player.role() != "red" and self.player.return_group_id() == self.player.round_number:
 					# if the red players failed to take a decision:
 					if self.group.return_red_timeout() == 1:
 						assert ("The red player in your group did not indicate any decision." in self.html)

@@ -108,10 +108,10 @@ SESSION_CONFIGS = [
     {
         'name': 'social_norms',
         'display_name': 'Social Norms Experiment',
-        'num_demo_participants': 6,
+        'num_demo_participants': 9,
         'app_sequence': ['social_norms'],
         'treatment': 'public',               # choose either "public" or "private"
-        'advice': 'A'                        # choose one of the options in the table.
+        'advice': 'C'                        # choose one of the options in the table.
     },
 ]
 

@@ -18,7 +18,7 @@ class Constants(BaseConstants):
 	# Requires a number of participants which is neatly divisible by 3
 	players_per_group = 3
 	# Please enter at least #participants/3
-	num_rounds = 100								 
+	num_rounds = 10								 
 
 	endowment = c(8)
 
@@ -30,7 +30,7 @@ class Constants(BaseConstants):
 
 class Subsession(BaseSubsession):
 			
-	def before_session_starts(self):
+	def creating_session(self):
 		# randomize participants into groups in round 1 only
 		#if self.round_number == 1:
 		#	self.group_randomly()						
@@ -47,6 +47,7 @@ class Subsession(BaseSubsession):
 		for group in group_matrix:
 			for player in group:
 				player.my_group_id = group_matrix.index(group) + 1
+		print(group_matrix)
 
 	# In the last round (i.e. round number = number of groups) I need to access the decision of the red players in round 1.
 	# This function gives the decision of the red player of the group with group number = actual round number.
