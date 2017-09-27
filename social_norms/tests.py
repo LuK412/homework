@@ -104,7 +104,7 @@ class PlayerBot(Bot):
 
 				yield (views.Intro_Part_II)
 
-		#page 5: Revelation
+		# page 5: Revelation
 		if self.round_number <= len(self.subsession.get_groups()):
 
 			if self.session.config["treatment"] == "public":

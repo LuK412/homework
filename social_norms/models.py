@@ -30,16 +30,13 @@ class Constants(BaseConstants):
 
 class Subsession(BaseSubsession):
 			
-	def creating_session(self):
-		# randomize participants into groups in round 1 only
-		#if self.round_number == 1:
-		#	self.group_randomly()						
+	def creating_session(self):					
 		for player in self.get_players():
 			player.treatment = self.session.config["treatment"]
 			player.advice = self.session.config["advice"]
 
 	def assign_group_id(self):
-		# This assigns each player his group ID:
+		# The following assigns each player his group ID:
 		group_matrix = self.get_group_matrix()
 		# It iterates over the list which contains sublists (each of those is a group).
 		# Then, it assigns each player in each list his/her group number (index in the list + 1 
@@ -47,7 +44,6 @@ class Subsession(BaseSubsession):
 		for group in group_matrix:
 			for player in group:
 				player.my_group_id = group_matrix.index(group) + 1
-		print(group_matrix)
 
 	# In the last round (i.e. round number = number of groups) I need to access the decision of the red players in round 1.
 	# This function gives the decision of the red player of the group with group number = actual round number.
@@ -66,21 +62,21 @@ class Group(BaseGroup):
 		choices=["A", "B", "C", "D", "E", "F"],
 		widget=widgets.RadioSelectHorizontal(),
 		verbose_name="Please make your decision.",
-		doc="red player makes his decision."
+		doc="red players makes his decision."
 		)
 
 	decision_blue = models.CharField(
 		choices=["A", "B", "C", "D", "E", "F"],
 		widget=widgets.RadioSelectHorizontal(),
 		verbose_name="Please indicate which allocation you would like red to choose.",
-		doc="blue players makes their decision."
+		doc="blue players make their decision."
 		)
 
 	decision_green = models.CharField(
 		choices=["A", "B", "C", "D", "E", "F"],
 		widget=widgets.RadioSelectHorizontal(),
 		verbose_name="Please indicate which allocation you would like red to choose.",
-		doc="green players makes their decision."
+		doc="green players make their decision."
 		)
 
 	red_timeout = models.BooleanField(
@@ -158,7 +154,7 @@ class Player(BasePlayer):
 		)
 
 
-	# below the fields of the questionnaire
+	# below are the fields of the questionnaire
 	age = models.PositiveIntegerField(
 		max=100,
 		verbose_name="How old are you?",
