@@ -180,7 +180,7 @@ class Player(BasePlayer):
 		doc="Ticking the checkbox means that the participant is a non-student.")
 
 	risk = models.CharField(
-		choices=["Highly risk averse", "risk averse", "somewhat risk averse", "neutral", "somewhat risk loving", "risk loving", "highly risk loving"],
+		choices=["highly risk averse", "risk averse", "somewhat risk averse", "neutral", "somewhat risk loving", "risk loving", "highly risk loving"],
 		widget=widgets.RadioSelectHorizontal(),
 		verbose_name="Please indicate your risk preference.",
 		doc="7 point likert scale to measure risk preference."
