@@ -12,12 +12,13 @@
 </p>
 	<p>&nbsp;</p>
 
+<p>
 	{% if player.role == "red" %}
 
 		Your color in the experiment is <strong> red </strong>.
 		<p>&nbsp;</p>
 		All red players in this room will now sequentially have to stand up, say their group number and the decision they took. <br>
-		Please remain seated until you see the request to stay up on your screen. <br>
+		Please remain seated until you see the request to stand up on your screen. <br>
 		All other players in this room will see your decision on their screens.
 
 	{% elif player.role == "blue" %}
@@ -33,6 +34,7 @@
 		All <strong> red players </strong> in this room will now sequentially have to stand up, say their group number and the decision they took. <br>
 
 	{% endif %}
+</p>
 
 <p>&nbsp;</p>
 	

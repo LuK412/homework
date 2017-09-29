@@ -63,7 +63,7 @@ class Decision_blue(Page):
 		if self.timeout_happened:
 			# ...blue_timeout turns 1
 			self.group.blue_timeout = 1
-		# otherwise red_timeout is 0.
+		# otherwise blue_timeout is 0.
 		else:
 			self.group.blue_timeout = 0
 
@@ -82,7 +82,7 @@ class Decision_green(Page):
 		if self.timeout_happened:
 			# ...green_timeout turns 1
 			self.group.green_timeout = 1
-		# otherwise red_timeout is 0.
+		# otherwise green_timeout is 0.
 		else:
 			self.group.green_timeout = 0
 
@@ -114,7 +114,7 @@ class Revelation(Page):
 	# This page is only displayed if the round number is less than the number of groups in the experiment.
 	# Remember that num_rounds in models.py is set to a large number.
 	# Going without this is no problem but would mean that participants arrive on Last_Page when the round number equals the group number
-	# and stay there forever, because the next button is missing. Otree, however, "would want" to play all rounds indicated in models.py.
+	# and stay there forever, because the next button is missing. Otree, however, "would like" to play all rounds indicated in models.py.
 	def is_displayed(self):
 		return self.session.config["treatment"] == "public" and self.round_number <= len(self.subsession.get_groups())
 
@@ -154,12 +154,10 @@ class Questionnaire(Page):
 	def error_message(self, values):
 		# ... indicates no field of studies and does not tick the box "non-student".
 		if values["studies"] == "" and values["studies2"] != True:
-			return "Are you a non-student?"
+			return "You indicated no field of studies. Are you a non-student?"
 		# ... states a field of studies and claimed to be a non-student.
 		elif values["studies"] != "" and values["studies2"] == True:
 			return "You stated a field of studies, but indicated that you are a non-student."
-		#elif values["risk"] == "":
-		#	return "Please indicate a risk preference."
 
 	def is_displayed(self):
 		return self.round_number == len(self.subsession.get_groups())

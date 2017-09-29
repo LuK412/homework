@@ -6,7 +6,7 @@ from otree.api import (
 
 from django_countries.fields import CountryField
 
-author = 'Luisa Kling'
+author = 'Luisa Kling, Matr.Nr.: 3170193'
 
 doc = """
 Social norms experiment to be run in a lecture hall.
@@ -45,7 +45,7 @@ class Subsession(BaseSubsession):
 			for player in group:
 				player.my_group_id = group_matrix.index(group) + 1
 
-	# In the last round (i.e. round number = number of groups) I need to access the decision of the red players in round 1.
+	# In higher rounds I need to access the decision of the red players in round 1.
 	# This function gives the decision of the red player of the group with group number = actual round number.
 	def return_red_decision(self):
 		all_groups = self.get_groups()
@@ -189,4 +189,5 @@ class Player(BasePlayer):
 	country = CountryField(
 		blank=True,
 		verbose_name="Please indicate your country of birth."
-		) # Kein doc möglich.
+		) # We ask participants for their country of birth.
+		# No doc possible

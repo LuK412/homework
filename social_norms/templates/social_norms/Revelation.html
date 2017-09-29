@@ -7,6 +7,7 @@
 
 {% block content %}
 
+<p>
 	{% if player.role == "red" and player.return_group_id == player.round_number %}
 
 		{% if group.return_red_timeout == 1 %}
@@ -50,7 +51,8 @@
 
 
 
-{% endif %}
+	{% endif %}
+</p>
 
 	<p>&nbsp;</p>
 	{% next_button %}
